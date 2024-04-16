@@ -1,6 +1,6 @@
 import Chats from "@/components/Chats";
 import FriendList from "@/components/FriendList";
-import Sidenav from "@/components/SIdenav";
+import Sidenav from "@/components/Sidenav";
 
 const client = () => {
 
