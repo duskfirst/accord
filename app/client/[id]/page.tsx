@@ -6,9 +6,6 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { useState } from "react";
 
 const Client = () => {
-  const [sideOpen, setSideOpen] = useState(false);
-  const [buttonClassname, setButtonClassname] = useState('self-start');
-  const [sideTabsClassName, setSideTabsClassName] = useState('-translate-x-full collapse hidden');
 
   return (
     <>
@@ -20,15 +17,15 @@ const Client = () => {
           <Sidenav className="border flex items-center justify-center h-full" />
           <FriendList className="border flex items-center justify-center w-4/12 h-full" />
         </ResizablePanel>
-        <ResizableHandle className=" justify-center w-0.5 hidden h-full border md:flex items-center" />
-        <ResizablePanel defaultSize={75}>
-          <Chats onClick={() => console.log(1)} buttonClassname={buttonClassname} sideOpen={sideOpen} />
+        <ResizableHandle className="md:flex  hidden" />
+        <ResizablePanel defaultSize={75} className=" h-full justify-center items-center">
+          <Chats />
 
         </ResizablePanel>
       </ResizablePanelGroup>
       <div className="flex h-full w-full md:hidden">
         <div className="border flex items-center w-full md:w-2/3 justify-center flex-grow h-full" >
-          <Chats onClick={() => console.log(1)} buttonClassname={buttonClassname} sideOpen={sideOpen} />
+          <Chats />
         </div>
       </ div >
     </>

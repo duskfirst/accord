@@ -1,10 +1,11 @@
 import ListItem from "@/components/ListItem";
-import { Conversation } from "@/types/types";
+import { Conversation, Message } from "@/types/types";
 import SideButton from "./SideButton";
 import MessageInput from "./MessageInput";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
 import SidePop from "./SidePop";
+import { createRef, useEffect, useState } from "react";
 
 const convo: Conversation = {
   "conversation": [
@@ -64,15 +65,25 @@ const convo: Conversation = {
     }
   ]
 }
-interface Props {
-  sideOpen: boolean,
-  buttonClassname: string
-  onClick: () => void
-}
 
 
-const Chats = ({ sideOpen, buttonClassname, onClick }: Props) => {
+const Chats = () => {
 
+
+  const [messages, setMessages] = useState<Message[]>([]);
+  useEffect(() => {
+    setMessages(convo.conversation)
+  }, [])
+  const onSend = (msg: string, name: string) => {
+    const data: Message = {
+      sender: "Alice",
+      receiver: name,
+      text: msg,
+      id: `${messages.length + 1}`
+    }
+    setMessages([...messages, data])
+
+  }
 
   return (
     <div className="h-full w-full flex flex-col p-1">
@@ -80,16 +91,16 @@ const Chats = ({ sideOpen, buttonClassname, onClick }: Props) => {
 
         <SidePop className=" md:hidden " />
         <span className="w-full text-center content-center">
-          Name
+          Alice
         </span>
 
       </div>
       <div className="border overflow-auto m-1 h-full text-center">
         <div className="">
-          <ListItem conversation={convo.conversation} user="Alice" />
+          <ListItem conversation={messages} user="Alice" />
         </div>
       </div>
-      <div className="border m-1 text-center h-14"><MessageInput /></div>
+      <div className="border m-1 text-center h-14"><MessageInput onSend={onSend} /></div>
     </div>
   )
 };
