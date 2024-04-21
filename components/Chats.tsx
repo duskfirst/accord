@@ -2,6 +2,9 @@ import ListItem from "@/components/ListItem";
 import { Conversation } from "@/types/types";
 import SideButton from "./SideButton";
 import MessageInput from "./MessageInput";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
+import { Button } from "./ui/button";
+import SidePop from "./SidePop";
 
 const convo: Conversation = {
   "conversation": [
@@ -73,10 +76,9 @@ const Chats = ({ sideOpen, buttonClassname, onClick }: Props) => {
 
   return (
     <div className="h-full w-full flex flex-col p-1">
-      <div className="border m-1 h-12 shrink-0 p-1  grid grid-cols-3 content-start">
-        {/* <div className="w-fit">
-          <SideButton sideOpen={sideOpen} onClick={onClick} buttonClassname={buttonClassname} />
-        </div> */}
+      <div className="border m-1 h-12 shrink-0 p-1  grid grid-cols-3 md:grid-cols-1 content-start">
+
+        <SidePop className=" md:hidden " />
         <span className="w-full text-center content-center">
           Name
         </span>
