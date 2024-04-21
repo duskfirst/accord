@@ -7,7 +7,7 @@ interface Props {
 const MessageBox = ({ msg, user }: Props) => {
 
   return (
-    <div className={msg.sender == user ? "flex flex-col overflow-hidden rounded-l-lg" : "flex flex-col overflow-hidden rounded-r-lg"} >
+    <div className={msg.sender == user ? "flex flex-col text-background overflow-hidden rounded-l-lg rounded-bl-none" : "flex flex-col text-background overflow-hidden rounded-r-lg rounded-br-none"} >
 
       < div className={msg.sender == user ? " bg-accent p-2.5 rounded-t-lg rounded-bl-lg" : "bg-accent p-2.5 rounded-t-lg rounded-br-lg"}>
         <div className="text-start font-bold mb-4  max-w-lg">
@@ -19,7 +19,7 @@ const MessageBox = ({ msg, user }: Props) => {
       </div>
       {
         <div className="bg-accent h-5">
-          <div className={msg.sender == user ? "bg-background w-full h-full rounded-tr-full" : "bg-background w-full h-full rounded-tl-full"}>
+          <div className={msg.sender == user ? "bg-background w-full h-full rounded-tr-full " : "bg-background w-full h-full rounded-tl-full"}>
 
           </div>
         </div>

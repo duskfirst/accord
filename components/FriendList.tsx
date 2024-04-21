@@ -1,7 +1,10 @@
-const FriendList = () => {
+interface Props {
+  className?: string,
+}
+const FriendList = ({ className }: Props) => {
 
   return (
-    <div>
+    <div className={className}>
       FriendList
     </div>
   )

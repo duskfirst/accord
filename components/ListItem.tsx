@@ -1,6 +1,6 @@
 import { Message } from "@/types/types";
-import { Card, CardContent, CardHeader } from "../ui/card";
-import MessageBox from "../MessageBox";
+import { Card, CardContent, CardHeader } from "./ui/card";
+import MessageBox from "./ChatBox";
 
 interface Props {
   conversation: Message[],

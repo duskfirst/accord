@@ -1,9 +1,12 @@
-const Sidenav = () => {
+interface Props {
+  className?: string,
+}
+const Sidenav = ({ className }: Props) => {
 
   return (
-    <div>
+    <div className={className}>
       Sidenav
-    </div>
+    </div >
   )
 };
 export default Sidenav;

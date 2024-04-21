@@ -1,6 +1,7 @@
-import ListItem from "@/components/ListItem/ListItem";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import ListItem from "@/components/ListItem";
 import { Conversation } from "@/types/types";
+import SideButton from "./SideButton";
+import MessageInput from "./MessageInput";
 
 const convo: Conversation = {
   "conversation": [
@@ -60,20 +61,34 @@ const convo: Conversation = {
     }
   ]
 }
+interface Props {
+  sideOpen: boolean,
+  buttonClassname: string
+  onClick: () => void
+}
 
-const chats = () => {
+
+const Chats = ({ sideOpen, buttonClassname, onClick }: Props) => {
+
 
   return (
-
     <div className="h-full w-full flex flex-col p-1">
-      <div className="border m-1 h-12 shrink-0 text-center">Name</div>
+      <div className="border m-1 h-12 shrink-0 p-1  grid grid-cols-3 content-start">
+        {/* <div className="w-fit">
+          <SideButton sideOpen={sideOpen} onClick={onClick} buttonClassname={buttonClassname} />
+        </div> */}
+        <span className="w-full text-center content-center">
+          Name
+        </span>
+
+      </div>
       <div className="border overflow-auto m-1 h-full text-center">
         <div className="">
           <ListItem conversation={convo.conversation} user="Alice" />
         </div>
       </div>
-      <div className="border m-1 text-center h-14">Message Box</div>
+      <div className="border m-1 text-center h-14"><MessageInput /></div>
     </div>
   )
 };
-export default chats;
+export default Chats;
