@@ -1,11 +1,8 @@
-import ListItem from "@/components/ListItem";
+import ListItem from "@/components/ListItems";
 import { Conversation, Message } from "@/types/types";
-import SideButton from "./SideButton";
 import MessageInput from "./MessageInput";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
-import { Button } from "./ui/button";
 import SidePop from "./SidePop";
-import { createRef, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const convo: Conversation = {
     "conversation": [
@@ -70,12 +67,13 @@ const convo: Conversation = {
 
 const Chats = ({ username }: { username: string }) => {
 
+    const listRef = useRef<HTMLLIElement>(null);
 
-    const [messages, setMessages] = useState<Message[]>([]);
-    useEffect(() => {
-        setMessages(convo.conversation);
-    }, []);
+    const [messages, setMessages] = useState<Message[]>(convo.conversation);
+
+
     const onSend = (msg: string, name: string) => {
+
         const data: Message = {
             sender: username,
             receiver: name,
@@ -83,8 +81,10 @@ const Chats = ({ username }: { username: string }) => {
             id: `${messages.length + 1}`
         };
         setMessages([...messages, data]);
-
     };
+    useEffect(() => {
+        listRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages])
 
     return (
         <div className="h-full w-full flex flex-col p-1">
@@ -96,9 +96,9 @@ const Chats = ({ username }: { username: string }) => {
                 </span>
 
             </div>
-            <div className="border overflow-auto m-1 h-full text-center">
+            <div className="border overflow-auto m-1 h-full text-center" >
                 <div className="">
-                    <ListItem conversation={messages} user={username} />
+                    <ListItem conversation={messages} user={username} listRef={listRef} />
                 </div>
             </div>
             <div className="border m-1 text-center h-14"><MessageInput onSend={onSend} /></div>

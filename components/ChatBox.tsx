@@ -13,7 +13,7 @@ const MessageBox = ({ msg, user }: Props) => {
                 <div className="text-start font-bold mb-1 max-w-lg">
                     {msg.sender == user ? "You" : msg.sender}
                 </div >
-                <div className="text-wrap">
+                <div className="text-wrap whitespace-pre-line">
                     {msg.text}
                 </div>
             </div>
