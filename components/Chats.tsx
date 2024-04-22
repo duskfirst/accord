@@ -67,7 +67,8 @@ const convo: Conversation = {
 };
 
 
-const Chats = () => {
+
+const Chats = ({ username }: { username: string }) => {
 
 
     const [messages, setMessages] = useState<Message[]>([]);
@@ -76,7 +77,7 @@ const Chats = () => {
     }, []);
     const onSend = (msg: string, name: string) => {
         const data: Message = {
-            sender: "Alice",
+            sender: username,
             receiver: name,
             text: msg,
             id: `${messages.length + 1}`
@@ -91,13 +92,13 @@ const Chats = () => {
 
                 <SidePop className=" md:hidden " />
                 <span className="w-full text-center content-center">
-                    Alice
+                    {username}
                 </span>
 
             </div>
             <div className="border overflow-auto m-1 h-full text-center">
                 <div className="">
-                    <ListItem conversation={messages} user="Alice" />
+                    <ListItem conversation={messages} user={username} />
                 </div>
             </div>
             <div className="border m-1 text-center h-14"><MessageInput onSend={onSend} /></div>
