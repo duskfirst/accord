@@ -1,9 +1,8 @@
 const MessageSend = () => {
-
-  return (
-    <div>
-      MessageSend
-    </div>
-  )
+    return (
+        <div>
+            MessageSend
+        </div>
+    );
 };
 export default MessageSend;

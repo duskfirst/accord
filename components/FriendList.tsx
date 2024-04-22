@@ -3,10 +3,10 @@ interface Props {
 }
 const FriendList = ({ className }: Props) => {
 
-  return (
-    <div className={className}>
-      FriendList
-    </div>
-  )
+    return (
+        <div className={className}>
+            FriendList
+        </div>
+    );
 };
 export default FriendList;
