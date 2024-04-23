@@ -126,7 +126,7 @@ const Chats = ({ username }: { username: string }) => {
     }, [messages, emojiActive, isFile]);
 
     useEffect(() => {
-        setInputVal(inputVal + emoji);
+        setInputVal(inputVal => inputVal + emoji);
         setEmoji('');
     }, [emoji]);
 
