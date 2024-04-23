@@ -1,6 +1,7 @@
 interface Props {
-  className?: string,
-}
+    className?: string,
+};
+
 const Sidenav = ({ className }: Props) => {
 
     return (
