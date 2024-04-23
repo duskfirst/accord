@@ -4,7 +4,7 @@ Yet another chat application.
 
 # Setup
 
-### Package Installtion
+### Package Installation
 
 Install packages with pnpm
 
@@ -25,16 +25,37 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 ```
 
+#### Email Templates
+
+Under `Authentication > Configuration > Email Templates`
+
+- Change the Subject heading to
+    ` Confirm Your Email `
+
+- Change the Message Body Source to
+    ```md
+    <h2>Confirm your email</h2>
+
+    Your confirmation code is <span class='font-size: 3rem'><b>{{ .Token }}</b></span>
+    ```
+
+> **NOTE:** It is important that you have `{{ .Token }}` in the email body or the user will not receive the OTP. The built-in email service has a rate limit of [3 per hour](https://supabase.com/docs/guides/platform/going-into-prod#auth-rate-limits). Setup a custom SMTP server if you are planning on having a large number of users. 
+
 #### Tables
 
 ##### `profiles`
 
 ```sql
+
+-- Case insensitive text
+create extension if not exists citext;
+
 -- Create a table for public profiles
 create table profiles (
     id uuid references auth.users not null primary key,
+    email varchar(255) not null unique,
     updated_at timestamp with time zone,
-    username text unique,
+    username citext unique,
     display_name text,
     avatar_url text,
     website text,
@@ -62,8 +83,8 @@ language plpgsql
 security definer set search_path = public
 as $$
 begin
-    insert into public.profiles (id, username)
-    values (new.id, new.raw_user_meta_data ->> 'username');
+    insert into public.profiles (id, username, email)
+    values (new.id, new.raw_user_meta_data ->> 'username', new.email);
     return new;
 end;
 $$;
