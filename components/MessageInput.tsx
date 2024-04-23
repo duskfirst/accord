@@ -1,23 +1,23 @@
-"use client"
-import { SendHorizontal } from "lucide-react"
-import { Button } from "./ui/button"
-import { useState } from "react"
+"use client";
+import { SendHorizontal } from "lucide-react";
+import { Button } from "./ui/button";
+import { useState } from "react";
 
 interface Props {
     onSend: (msg: string, name: string) => void
 }
 
 const MessageInput = ({ onSend }: Props) => {
-    const [inputVal, setInputVal] = useState("")
+    const [inputVal, setInputVal] = useState("");
     const onClick = () => {
-        onSend(inputVal, "Bob")
-        setInputVal("")
-    }
+        onSend(inputVal, "Bob");
+        setInputVal("");
+    };
     const enterClick = (e: any) => {
         const key = e?.key;
         if (key === 'Enter' && e?.ctrlKey)
             onClick();
-    }
+    };
 
 
     return (
@@ -40,6 +40,6 @@ const MessageInput = ({ onSend }: Props) => {
                 <SendHorizontal />
             </Button>
         </div>
-    )
-}
-export default MessageInput
+    );
+};
+export default MessageInput;

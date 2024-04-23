@@ -1,6 +1,6 @@
-import { Message } from "@/types/types"
-import MessageBox from "./ChatBox"
-import { LegacyRef } from "react"
+import { Message } from "@/types/types";
+import MessageBox from "./ChatBox";
+import { LegacyRef } from "react";
 
 interface Props {
     conversation: Message[] | undefined
@@ -31,6 +31,6 @@ const ListItem = ({ conversation, user, listRef }: Props) => {
                 </li>
             ))}
         </ul>
-    )
-}
-export default ListItem
+    );
+};
+export default ListItem;

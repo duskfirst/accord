@@ -84,7 +84,7 @@ const Chats = ({ username }: { username: string }) => {
     };
     useEffect(() => {
         listRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages])
+    }, [messages]);
 
     return (
         <div className="h-full w-full flex flex-col p-1">
