@@ -4,7 +4,7 @@ import MessageInput from "./MessageInput";
 import SidePop from "./SidePop";
 import { useEffect, useRef, useState } from "react";
 import EmojiPicker, { EmojiStyle, SuggestionMode, Theme } from "emoji-picker-react";
-import { Import } from "lucide-react";
+import { Import, User } from "lucide-react";
 import { Label } from "./ui/label";
 
 const convo: Conversation = {
@@ -140,12 +140,15 @@ const Chats = ({ username }: { username: string }) => {
 
     return (
         <div className="h-full w-full flex flex-col p-1">
-            <div className="border m-1 h-12 shrink-0 p-1  grid grid-cols-3 md:grid-cols-1 content-start">
+            <div className="border m-1 h-12 shrink-0 p-1  grid grid-cols-3 md:flex items-center content-start">
 
                 <SidePop className=" md:hidden " />
                 <span className="w-full text-center content-center">
                     {username}
                 </span>
+                <div className="mr-8">
+                    <User />
+                </div>
 
             </div>
             <div className="border overflow-auto m-1 h-full text-center" >
