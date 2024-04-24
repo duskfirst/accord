@@ -2,7 +2,7 @@
 
 import { UserSchema } from "./UserSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createBrowserClient } from '@/utils/supabase/client';
+import { createBrowserClient } from "@/utils/supabase/client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +19,16 @@ import { Input } from "@/components/ui/input";
 import { useState,useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useDebounceCallback } from "usehooks-ts";
+
+import {
+    Eye,
+    EyeOff,
+    Lock,
+    Mail,
+    User,
+    LoaderCircle,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 
 const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
@@ -56,10 +66,16 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
 
     const usernameState = getFieldState("username", formState);
     const emailState = getFieldState("email", formState);
+    const passwordState = getFieldState("password", formState);
+    const { isSubmitting } = formState;
 
     const usernameStateRef = useRef(usernameState);
     const emailStateRef = useRef(emailState);
 
+    const [showPassword, setShowPassword] = useState(false);
+    const toggleShowPassword = () => {
+        setShowPassword(show => !show);
+    };
 
     const onSubmit = async (values: UserSchema) => {
 
@@ -117,7 +133,6 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
         }
 
     };
-
 
     const validateUsername = async () => {
         await trigger("username");
@@ -187,8 +202,10 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
                             <FormLabel>Email</FormLabel>
                             <FormControl>
                                 <div className="relative flex items-center">
-                                    {/* placeholder for icon */}
-                                    <Input placeholder="email address" {...field} type="email" className="pl-8" onChange={event => handleChange(event, field.name)} />
+                                    <Mail size={18} className={
+                                        cn("absolute left-2", emailState.isDirty && !emailState.isValidating && (emailState.invalid ? "text-destructive" : "text-success"))
+                                    } />
+                                    <Input placeholder="email address" {...field} type="email" className="px-8" onChange={event => handleChange(event, field.name)} />
                                 </div>
                             </FormControl>
                             <FormDescription>
@@ -206,8 +223,10 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
                             <FormLabel>Username</FormLabel>
                             <FormControl>
                                 <div className="relative flex items-center">
-                                    {/* placeholder for icon */}
-                                    <Input placeholder="username" {...field} className="pl-8" onChange={event => handleChange(event, field.name)} />
+                                    <User size={18} className={
+                                        cn("absolute left-2", usernameState.isDirty && (usernameState.invalid ? "text-destructive" : "text-success"))
+                                    } />
+                                    <Input placeholder="username" {...field} className="px-8" onChange={event => handleChange(event, field.name)} />
                                 </div>
                             </FormControl>
                             <FormDescription>
@@ -225,8 +244,18 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
                             <FormLabel>Password</FormLabel>
                             <FormControl>
                                 <div className="relative flex items-center">
-                                    {/* placeholder for icon */}
-                                    <Input placeholder="password" {...field} type="password" className="pl-8" onChange={event => handleChange(event, field.name)} />
+                                    <Lock size={18} className={
+                                        cn("absolute left-2", passwordState.isDirty && (passwordState.invalid ? "text-destructive" : "text-success"))
+                                    } />
+                                    {/* Note: validation for all three is run when input's type is toggled */}
+                                    <Input placeholder="password" {...field} type={showPassword ? "text" : "password"} className="px-8 min-w-72" onChange={event => handleChange(event, field.name)} />
+                                    <button className="absolute right-2" onClick={toggleShowPassword}>
+                                        {
+                                            showPassword 
+                                                ? <EyeOff size={18}/>
+                                                : <Eye size={18}/>
+                                        }
+                                    </button>
                                 </div>
                             </FormControl>
                             <FormDescription>
@@ -236,7 +265,13 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Submit</Button>
+                <Button className="min-w-24" disabled={isSubmitting} type="submit">
+                    {
+                        isSubmitting
+                            ? <LoaderCircle size={18} className='animate-spin'/>
+                            : "Submit"
+                    }
+                </Button>
             </form>
         </Form>
     );

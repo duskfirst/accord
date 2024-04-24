@@ -1,5 +1,5 @@
-import { createServerClient } from '@supabase/ssr';
-import { NextRequest, NextResponse } from 'next/server';
+import { createServerClient } from "@supabase/ssr";
+import { NextRequest, NextResponse } from "next/server";
 
 
 export async function updateSession(request: NextRequest) {
@@ -37,7 +37,7 @@ export async function updateSession(request: NextRequest) {
                 remove(name, options) {
                     request.cookies.set({
                         name,
-                        value: '',
+                        value: "",
                         ...options,
                     });
                     response = NextResponse.next({
@@ -47,7 +47,7 @@ export async function updateSession(request: NextRequest) {
                     });
                     response.cookies.set({
                         name,
-                        value: '',
+                        value: "",
                         ...options,
                     });
                 },

@@ -23,6 +23,8 @@ import {
 import { OTPSchema } from "./OTPSchema";
 import { validateOTP } from "./validateOTP";
 
+import { Loader } from "lucide-react";
+
 
 const OTPForm = ({ email, setIsValidEmail } : {
     email: string,
@@ -38,8 +40,9 @@ const OTPForm = ({ email, setIsValidEmail } : {
 
     const {
         control,
+        formState: { isSubmitting },
         handleSubmit,
-        setError
+        setError,
     } = OTPform;
 
     const validate = async (values: OTPSchema) => {
@@ -77,7 +80,13 @@ const OTPForm = ({ email, setIsValidEmail } : {
                     )}
                 />
 
-                <Button type="submit">Submit</Button>
+                <Button className="min-w-24" disabled={isSubmitting} type="submit">
+                    {
+                        isSubmitting
+                            ? <Loader size={18} className='animate-spin'/>
+                            : "Submit"
+                    }
+                </Button>
             </form>
         </Form>
     );

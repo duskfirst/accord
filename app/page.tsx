@@ -1,5 +1,5 @@
-import { createServerClient } from '@/utils/supabase/server';
-import Link from 'next/link';
+import { createServerClient } from "@/utils/supabase/server";
+import Link from "next/link";
 
 const UserPage = () => {
     return (
@@ -15,7 +15,7 @@ const HomePage = () => {
             <div>
                 home page
             </div>
-            <Link href={'/login'} >Login</Link>
+            <Link href={"/login"} >Login</Link>
         </div>
     );
 };

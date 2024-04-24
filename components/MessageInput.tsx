@@ -8,10 +8,10 @@ interface Props {
 }
 
 const MessageInput = ({ onSend }: Props) => {
-    const [inputVal, setInputVal] = useState('');
+    const [inputVal, setInputVal] = useState("");
     const onClick = () => {
         onSend(inputVal, "Bob");
-        setInputVal('');
+        setInputVal("");
     };
 
 
@@ -25,7 +25,7 @@ const MessageInput = ({ onSend }: Props) => {
                 onChange={(event) => setInputVal(event.target.value)}
                 value={inputVal}
                 className="h-full w-full bg-transparent rounded-lg  p-2  focus:outline-none " />
-            <Button type="submit" disabled={inputVal === ''} onClick={onClick} className="flex items-center hover:text-ring hover:border  justify-center rounded-md">
+            <Button type="submit" disabled={inputVal === ""} onClick={onClick} className="flex items-center hover:text-ring hover:border  justify-center rounded-md">
                 <SendHorizontal />
             </Button>
         </div>

@@ -1,8 +1,8 @@
 "use client";
 
-import RegisterForm from './register/RegisterForm';
-import OTPForm from './otp/OTPForm';
-import { useState } from 'react';
+import RegisterForm from "./register/RegisterForm";
+import OTPForm from "./otp/OTPForm";
+import { useState } from "react";
 
 // need to rename
 const Common = () => {

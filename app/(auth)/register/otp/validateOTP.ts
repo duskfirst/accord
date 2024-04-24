@@ -1,8 +1,8 @@
 "use server";
 
-import { redirect } from 'next/navigation';
-import { OTPSchema } from './OTPSchema';
-import { createServerClient } from '@/utils/supabase/server';
+import { redirect } from "next/navigation";
+import { OTPSchema } from "./OTPSchema";
+import { createServerClient } from "@/utils/supabase/server";
 
 
 export const validateOTP = async ({ pin } : OTPSchema, email: string) => {
