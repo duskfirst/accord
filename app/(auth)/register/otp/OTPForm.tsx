@@ -18,6 +18,7 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
+    FormRootError,
 } from "@/components/ui/form";
 
 import { OTPSchema } from "./OTPSchema";
@@ -26,7 +27,7 @@ import { validateOTP } from "./validateOTP";
 import { Loader } from "lucide-react";
 
 
-const OTPForm = ({ email, setIsValidEmail } : {
+const OTPForm = ({ email } : {
     email: string,
     setIsValidEmail: React.Dispatch<React.SetStateAction<boolean>>,
 }) => {
@@ -48,7 +49,7 @@ const OTPForm = ({ email, setIsValidEmail } : {
     const validate = async (values: OTPSchema) => {
         const error = await validateOTP(values, email);
         if (error) {
-            setError("pin", error, { shouldFocus: true });
+            setError("pin", { message: error }, { shouldFocus: true });
         }
     };
     return (
@@ -79,7 +80,7 @@ const OTPForm = ({ email, setIsValidEmail } : {
                         </FormItem>
                     )}
                 />
-
+                <FormRootError />
                 <Button className="min-w-24" disabled={isSubmitting} type="submit">
                     {
                         isSubmitting

@@ -11,7 +11,7 @@ const Common = () => {
     const [isValidEmail, setIsValidEmail] = useState(false);
 
     return (
-        isValidEmail && emailValue ? <OTPForm email={emailValue} setIsValidEmail={setIsValidEmail} />
+        isValidEmail && emailValue ? <OTPForm email={emailValue} />
             : <RegisterForm  emailValue={emailValue} setEmailValue={setEmailValue} setIsValidEmail={setIsValidEmail} />
     );
 };

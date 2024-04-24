@@ -1,6 +1,6 @@
 "use client";
 
-import { UserSchema } from "./UserSchema";
+import { RegisterSchema } from "./RegisterSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createBrowserClient } from "@/utils/supabase/client";
 
@@ -13,10 +13,11 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
+    FormRootError,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { useState,useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useDebounceCallback } from "usehooks-ts";
 
@@ -29,6 +30,7 @@ import {
     LoaderCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { register } from "./register";
 
 
 const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
@@ -37,8 +39,8 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
     setIsValidEmail: React.Dispatch<React.SetStateAction<boolean>>,
 }) => {
     
-    const form = useForm<UserSchema>({
-        resolver: zodResolver(UserSchema),
+    const form = useForm<RegisterSchema>({
+        resolver: zodResolver(RegisterSchema),
         defaultValues: {
             username: "",
             email: "",
@@ -77,7 +79,7 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
         setShowPassword(show => !show);
     };
 
-    const onSubmit = async (values: UserSchema) => {
+    const onSubmit = async (values: RegisterSchema) => {
 
         // emailState and usernameState are always valid by the time this function is run
         // email and username errors are cleared so we need to check again
@@ -90,21 +92,10 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
             return;
         }
 
-        console.log("submitted:", values);
-        const {
-            error
-        } = await supabase.auth.signUp({
-            email: values.email,
-            password: values.password,
-            options: {
-                data: {
-                    username: values.username,
-                },
-            },
-        });
+        const error = await register(values);
+        
         if (error) {
-            console.log(error);
-            alert(`will handle this error later: ${error}`);
+            setError("root", { message: error });
         } else {
             setIsValidEmail(true);
         }
@@ -115,7 +106,7 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
 
     const handleChange = (
         event: React.ChangeEvent<HTMLInputElement>,
-        fieldName: keyof UserSchema,
+        fieldName: keyof RegisterSchema,
     ) => {
 
         const { value } = event.target;
@@ -247,15 +238,15 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
                                     <Lock size={18} className={
                                         cn("absolute left-2", passwordState.isDirty && (passwordState.invalid ? "text-destructive" : "text-success"))
                                     } />
-                                    {/* Note: validation for all three is run when input's type is toggled */}
                                     <Input placeholder="password" {...field} type={showPassword ? "text" : "password"} className="px-8 min-w-72" onChange={event => handleChange(event, field.name)} />
-                                    <button className="absolute right-2" onClick={toggleShowPassword}>
+                                    {/* changing this to button instead of span will trigger form submission on click */}
+                                    <span className="absolute right-2 select-none cursor-pointer" onClick={toggleShowPassword}>
                                         {
                                             showPassword 
                                                 ? <EyeOff size={18}/>
                                                 : <Eye size={18}/>
                                         }
-                                    </button>
+                                    </span>
                                 </div>
                             </FormControl>
                             <FormDescription>
@@ -264,7 +255,8 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
                             <FormMessage />
                         </FormItem>
                     )}
-                />
+                    />
+                <FormRootError/>
                 <Button className="min-w-24" disabled={isSubmitting} type="submit">
                     {
                         isSubmitting
