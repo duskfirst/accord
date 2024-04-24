@@ -1,7 +1,6 @@
 "use client";
 
-import { userSchema, UserSchema } from "./user-schema";
-import { z } from "zod";
+import { UserSchema } from "./UserSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createBrowserClient } from '@/utils/supabase/client';
 
@@ -17,29 +16,83 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { useState,useEffect } from "react";
+import { useState,useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useDebounceCallback } from "usehooks-ts";
 
 
-function onSubmit(values: UserSchema) {
-    console.log(values);
-}
-
-const RegisterForm = () => {
-
-    const registerForm = useForm<UserSchema>({
-        resolver: zodResolver(userSchema),
+const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
+    emailValue: string,
+    setEmailValue: React.Dispatch<React.SetStateAction<string>>,
+    setIsValidEmail: React.Dispatch<React.SetStateAction<boolean>>,
+}) => {
+    
+    const form = useForm<UserSchema>({
+        resolver: zodResolver(UserSchema),
         defaultValues: {
             username: "",
             email: "",
             password: "",
         },
         mode: "onChange",
+        reValidateMode: "onSubmit",
     });
+    const {
+        clearErrors,
+        control,
+        formState,
+        getFieldState,
+        handleSubmit,
+        setError,
+        setValue,
+        trigger,
+    } = form;
 
     const [usernameValue, setUsernameValue] = useState("");
-    const [emailValue, setEmailValue] = useState("");
+    const [errorFlag, setErrorFlag] = useState(false);
+    const errorFlagRef = useRef(errorFlag);
+
+    const supabase = createBrowserClient();
+
+    const usernameState = getFieldState("username", formState);
+    const emailState = getFieldState("email", formState);
+
+    const usernameStateRef = useRef(usernameState);
+    const emailStateRef = useRef(emailState);
+
+
+    const onSubmit = async (values: UserSchema) => {
+
+        // emailState and usernameState are always valid by the time this function is run
+        // email and username errors are cleared so we need to check again
+        await validateEmail();
+        await validateUsername();
+
+        // email or username are taken so do not signup
+        if (errorFlagRef.current) {
+            errorFlagRef.current = false;
+            return;
+        }
+
+        console.log("submitted:", values);
+        const {
+            error
+        } = await supabase.auth.signUp({
+            email: values.email,
+            password: values.password,
+            options: {
+                data: {
+                    username: values.username,
+                },
+            },
+        });
+        if (error) {
+            console.log(error);
+            alert(`will handle this error later: ${error}`);
+        } else {
+            setIsValidEmail(true);
+        }
+    };
 
     const debounceUsername = useDebounceCallback(setUsernameValue, 500);
     const debounceEmail = useDebounceCallback(setEmailValue, 500);
@@ -52,28 +105,26 @@ const RegisterForm = () => {
         const { value } = event.target;
 
         if (fieldName == "username") {
-            registerForm.setValue(fieldName, value, { shouldDirty: true, shouldValidate: false });
+            setValue(fieldName, value, { shouldDirty: true, shouldValidate: false });
             debounceUsername(value);
         }
         if (fieldName == "email") {
-            registerForm.setValue(fieldName, value, { shouldDirty: true, shouldValidate: false });
+            setValue(fieldName, value, { shouldDirty: true, shouldValidate: false });
             debounceEmail(value);
         }
         if (fieldName == "password") {
-            registerForm.setValue(fieldName, value, { shouldDirty: true, shouldValidate: true });
+            setValue(fieldName, value, { shouldDirty: true, shouldValidate: true });
         }
 
     };
 
-    const usernameState = registerForm.getFieldState("username", registerForm.formState);
-    const emailState = registerForm.getFieldState("email", registerForm.formState);
-
-    const supabase = createBrowserClient();
 
     const validateUsername = async () => {
-        await registerForm.trigger("username");
-        if (usernameState.invalid)
+        await trigger("username");
+        if (usernameStateRef.current.invalid) {
+            setErrorFlag(errorFlagRef.current = true);
             return;
+        }
         const {
             data, error
         } = await supabase
@@ -82,16 +133,20 @@ const RegisterForm = () => {
             .eq("username", usernameValue)
             .limit(1);
         if (error) {
-            registerForm.setError("username", error, { shouldFocus: true });
-        } else if (data.values.length) {
-            registerForm.setError("username", { message: "Username is taken." }, { shouldFocus: true });
+            setError("username", error);
+            setErrorFlag(errorFlagRef.current = true);
+        } else if (data.length) {
+            setError("username", { message: "Username is taken." });
+            setErrorFlag(errorFlagRef.current = true);
         }
-    }
+    };
 
     const validateEmail = async () => {
-        await registerForm.trigger("email");
-        if (emailState.invalid)
+        await trigger("email");
+        if (emailStateRef.current.invalid) {
+            setErrorFlag(errorFlagRef.current = true);
             return;
+        }
         const {
             data, error
         } = await supabase
@@ -100,9 +155,11 @@ const RegisterForm = () => {
             .eq("email", emailValue)
             .limit(1);
         if (error) {
-            registerForm.setError("email", error, { shouldFocus: true });
-        } else if (data.values.length) {
-            registerForm.setError("email", { message: "This email is already in use." }, { shouldFocus: true });
+            setError("email", error);
+            setErrorFlag(errorFlagRef.current = true);
+        } else if (data.length) {
+            setError("email", { message: "This email is already in use." });
+            setErrorFlag(() => errorFlagRef.current = true);
         }
     };
 
@@ -110,20 +167,20 @@ const RegisterForm = () => {
         if (emailValue)
             validateEmail();
         else
-            registerForm.clearErrors("email");
-    }, [emailValue]);
+            clearErrors("email");
+    }, [emailValue]); // eslint-disable-line react-hooks/exhaustive-deps
     useEffect(() => {
         if (usernameValue)
             validateUsername();
         else
-            registerForm.clearErrors("username");
-    }, [usernameValue]);
+            clearErrors("username");
+    }, [usernameValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-        <Form {...registerForm}>
-            <form onSubmit={registerForm.handleSubmit(onSubmit)} className="space-y-8">
+        <Form {...form}>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 ">
                 <FormField
-                    control={registerForm.control}
+                    control={control}
                     name="email"
                     render={({ field }) => (
                         <FormItem>
@@ -142,7 +199,7 @@ const RegisterForm = () => {
                     )}
                 />
                 <FormField
-                    control={registerForm.control}
+                    control={control}
                     name="username"
                     render={({ field }) => (
                         <FormItem>
@@ -161,7 +218,7 @@ const RegisterForm = () => {
                     )}
                 />
                 <FormField
-                    control={registerForm.control}
+                    control={control}
                     name="password"
                     render={({ field }) => (
                         <FormItem>
@@ -182,7 +239,7 @@ const RegisterForm = () => {
                 <Button type="submit">Submit</Button>
             </form>
         </Form>
-    )
+    );
 };
 
 export default RegisterForm;

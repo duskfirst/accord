@@ -6,11 +6,11 @@
     ],
     "rules": {
         "semi": [
-            "error",
+            "warn",
             "always"
         ],
         "indent": [
-            "error",
+            "warn",
             4
         ]
     }

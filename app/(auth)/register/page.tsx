@@ -1,16 +1,19 @@
+"use server";
+
 import { createServerClient } from '@/utils/supabase/server';
-import RegisterForm from './RegisterForm';
 import { redirect } from 'next/navigation';
+import Common from "./Common";
+
 
 const RegisterPage = async () => {
     const supabase = createServerClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
-        return redirect('/');
+        redirect('/');
     }
     return (
-        <RegisterForm />
+        <Common />
     );
-}
+};
 
 export default RegisterPage;

@@ -20,14 +20,14 @@ export function createServerClient() {
                     try {
                         cookieStore.set({ name, value, ...options });
                     } catch (error) {
-                        console.error(error);
+                        console.log(error);
                     }
                 },
                 remove(name, options) {
                     try {
                         cookieStore.set({ name, value: '', ...options });
                     } catch (error) {
-                        console.error(error);
+                        console.log(error);
                     }
                 },
             },

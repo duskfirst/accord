@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 
-export const userSchema = z.object({
+export const UserSchema = z.object({
     email:  z
         .string()
         .trim()
@@ -21,4 +21,4 @@ export const userSchema = z.object({
         .refine(password => /^[\w!@#$%^&*\(\)=+{}\|\\\[\] '";:<>,.\?/~`-]+$/.test(password), "Password contains invalid characters.")
 });
 
-export type UserSchema = z.infer<typeof userSchema>;
+export type UserSchema = z.infer<typeof UserSchema>;
