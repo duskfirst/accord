@@ -22,6 +22,7 @@ const friendData = [
 
 const FriendList = ({ className, setReceiver, receiver }: Props) => {
 
+
     return (
         <div className={className + "w-full"} >
 
@@ -31,7 +32,7 @@ const FriendList = ({ className, setReceiver, receiver }: Props) => {
                     <li
                         key={user.id + "FriendList"}
                         className={"flex flex-col text-left hover:bg-muted pl-4 rounded-md self-end m-2" + ((receiver === user.receiver) ? "bg-muted" : '')}
-                        onClick={() => { setReceiver(user.username); console.log(user.username); }}
+                        onClick={() => setReceiver(user.username)}
                     >
                         <div className="flex text-left items-center justify-start relative self-start gap-2 m-2 w-full" >
                             <Image src={user.image_url} alt="Pfp" key={user.id + "friendDataimg"} className="w-10 h-10 mr-2  rounded-full" width={40} height={40} />

@@ -7,7 +7,7 @@ import { useState } from "react";
 
 
 const Page = ({ params }: { params: { username: string } }) => {
-    const [receiver, setReceiver] = useState("Bob");
+    const [receiver, setReceiver] = useState("Ethan");
 
     return (
         <>

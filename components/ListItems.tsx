@@ -9,9 +9,11 @@ interface Props {
     receiver?: string,
 }
 const ListItem = ({ conversation, user, listRef, receiver }: Props) => {
+    const filteredConvo = conversation?.filter((convo) => (convo.receiver === receiver && convo.sender === user) || (convo.sender === receiver && convo.receiver === user));
+
     return (
         <ul className="p-2 flex flex-col justify-end h-full scroll-">
-            {conversation?.map((convo: Message) => (
+            {filteredConvo?.map((convo: Message) => (
                 <li
                     className={
                         convo.sender == user
@@ -20,7 +22,7 @@ const ListItem = ({ conversation, user, listRef, receiver }: Props) => {
                     }
                     key={convo.id}
                     ref={
-                        conversation[conversation.length - 1] === convo
+                        filteredConvo[filteredConvo.length - 1] === convo
                             ? listRef
                             : undefined
                     }
