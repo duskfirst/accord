@@ -68,10 +68,11 @@ const convo: Conversation = {
 
 
 
-const Chats = ({ username }: { username: string }) => {
+const Chats = ({ username, setReceiver, receiver }: { receiver: string, username: string, setReceiver: (data: string) => void }) => {
 
     const [emojiActive, setEmojiActive] = useState(false);
     const listRef = useRef<HTMLLIElement>(null);
+    const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const [emoji, setEmoji] = useState('');
     const [messages, setMessages] = useState<Message[]>(convo.conversation);
     const [isFile, setIsFile] = useState(false);
@@ -116,6 +117,8 @@ const Chats = ({ username }: { username: string }) => {
     };
 
     const onEnterClick = (e: KeyboardEvent) => {
+        if (inputVal === '')
+            return;
         const key = e?.key;
         if (key === 'Enter' && e?.ctrlKey)
             onClick();
@@ -134,7 +137,7 @@ const Chats = ({ username }: { username: string }) => {
         if (e.target.files) {
             setInputVal(e.target.files[0]?.name);
             setFile(e.target.files[0]);
-
+            textAreaRef.current?.focus();
         }
     };
 
@@ -142,7 +145,7 @@ const Chats = ({ username }: { username: string }) => {
         <div className="h-full w-full flex flex-col p-1">
             <div className="border m-1 h-12 shrink-0 p-1  grid grid-cols-3 md:flex items-center content-start">
 
-                <SidePop className=" md:hidden " />
+                <SidePop receiver={receiver} setReceiver={setReceiver} className=" md:hidden " />
                 <span className="w-full text-center content-center">
                     {username}
                 </span>
@@ -172,11 +175,12 @@ const Chats = ({ username }: { username: string }) => {
                         <span className="text-xl ">Upload A File</span>
                         <Import className="relative size-40" />
                     </Label>
-                    <input id="fileUpload" type="file" className="opacity-0 z-0 hover:cursor-pointer" onChange={onFileChange} />
+                    <input id="fileUpload" type="file" className="w-0 h-0 hover:cursor-pointer" onChange={onFileChange} />
                 </div>
             }
             <div className="border m-1 flex flex-col text-center h-fit" >
                 <MessageInput
+                    textAreaRef={textAreaRef}
                     setFile={setIsFile}
                     isFile={isFile}
                     inputVal={inputVal}

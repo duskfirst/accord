@@ -1,6 +1,7 @@
 "use client";
 import { File, SendHorizontal, Smile, X } from "lucide-react";
 import { Button } from "./ui/button";
+import { LegacyRef } from "react";
 
 interface Props {
     onClick: () => void,
@@ -10,10 +11,11 @@ interface Props {
     inputVal: string,
     setInputVal: (data: string) => void;
     isFile: boolean,
+    textAreaRef: LegacyRef<HTMLTextAreaElement> | undefined
     setFile: (fileActive: boolean) => void,
 }
 
-const MessageInput = ({ onClick, onEnterClick, inputVal, setInputVal, emojiActive, setEmojiActive, isFile, setFile }: Props) => {
+const MessageInput = ({ onClick, onEnterClick, inputVal, setInputVal, emojiActive, setEmojiActive, isFile, textAreaRef, setFile }: Props) => {
 
 
     const onEmojiOpen = () => {
@@ -32,6 +34,7 @@ const MessageInput = ({ onClick, onEnterClick, inputVal, setInputVal, emojiActiv
                 <Button variant={"ghost"} onClick={onEmojiOpen} className="rounded-full w-fit p-2">{emojiActive ? <X /> : <Smile />}</Button>
 
                 <textarea
+                    ref={textAreaRef}
                     id="message"
                     name="message"
                     placeholder="Enter Message"

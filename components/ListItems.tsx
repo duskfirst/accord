@@ -3,11 +3,12 @@ import MessageBox from "./ChatBox";
 import { LegacyRef } from "react";
 
 interface Props {
-    conversation: Message[] | undefined
-    user: string
-    listRef: LegacyRef<HTMLLIElement> | undefined
+    conversation: Message[] | undefined,
+    user: string,
+    listRef: LegacyRef<HTMLLIElement> | undefined,
+    receiver?: string,
 }
-const ListItem = ({ conversation, user, listRef }: Props) => {
+const ListItem = ({ conversation, user, listRef, receiver }: Props) => {
     return (
         <ul className="p-2 flex flex-col justify-end h-full scroll-">
             {conversation?.map((convo: Message) => (
