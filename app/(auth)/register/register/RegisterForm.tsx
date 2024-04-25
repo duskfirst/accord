@@ -128,6 +128,7 @@ const RegisterForm = () => {
             .from("profiles")
             .select("username")
             .eq("username", usernameValue)
+            .not("email_confirmed_at", "is", null)
             .limit(1);
         if (error) {
             setError("username", error);
@@ -150,13 +151,14 @@ const RegisterForm = () => {
             .from("profiles")
             .select("email")
             .eq("email", emailValue)
+            .not("email_confirmed_at", "is", null)
             .limit(1);
         if (error) {
             setError("email", error);
             setErrorFlag(errorFlagRef.current = true);
         } else if (data.length) {
             setError("email", { message: "This email is already in use." });
-            setErrorFlag(() => errorFlagRef.current = true);
+            setErrorFlag(errorFlagRef.current = true);
         }
     };
 

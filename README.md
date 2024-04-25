@@ -23,6 +23,7 @@ pnpm i
 ```
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SECRET_KEY=your_secret_key
 ```
 
 #### Email Templates
@@ -52,13 +53,14 @@ create extension if not exists citext;
 
 -- Create a table for public profiles
 create table profiles (
-    id uuid references auth.users not null primary key,
+    id uuid references auth.users on delete cascade not null primary key,
     email varchar(255) not null unique,
     updated_at timestamp with time zone,
     username citext unique,
     display_name text,
     avatar_url text,
     website text,
+    email_confirmed_at timestamptz,
 
   constraint username_length check (char_length(username) >= 3)
 );
@@ -83,11 +85,28 @@ language plpgsql
 security definer set search_path = public
 as $$
 begin
-    insert into public.profiles (id, username, email)
-    values (new.id, new.raw_user_meta_data ->> 'username', new.email);
+    insert into public.profiles (id, username, email, email_confirmed_at)
+    values (new.id, new.raw_user_meta_data ->> 'username', new.email, new.email_confirmed_at);
     return new;
 end;
 $$;
+
+create function public.email_confirmed_at_fn() 
+returns trigger
+language plpgsql
+security definer set search_path = public
+as $$
+begin
+    update public.profiles set profiles.email_confirmed_at = new.email_confirmed_at where profiles.id = new.id;
+    return new;
+end;
+$$;
+
+create trigger email_confirmed_at_trigger after update
+    on auth.users
+    for each row
+    when (old.email_confirmed_at is distinct from new.email_confirmed_at)
+    execute function email_confirmed_at_fn();
 
 -- trigger the function every time a user is created
 create trigger on_auth_user_created

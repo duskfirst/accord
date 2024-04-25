@@ -4,20 +4,38 @@ import { createServerClient } from "@/utils/supabase/server";
 import { RegisterSchema } from "./RegisterSchema";
 
 
-export const register = async (values: RegisterSchema) => {
+export const register = async ({ email, password, username }: RegisterSchema) => {
 
     const supabase = createServerClient();
     const {
-        error
+        data, error
     } = await supabase.auth.signUp({
-        email: values.email,
-        password: values.password,
+        email,
+        password,
         options: {
             data: {
-                username: values.username,
+                username,
             },
         },
     });
+
+    if (!error) {
+            {
+                const { data, error } = await supabase
+                    .from("profiles")
+                    .update({ username: null })
+                    .eq("username", username);
+
+                if (error) {
+                    return error.message;
+                }
+            }
+        const { data, error } = await supabase
+            .from("profiles")
+            .update({ username })
+            .eq("email", email);
+        return error?.message;
+    }
 
     return error?.message ;
 
