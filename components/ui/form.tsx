@@ -13,6 +13,9 @@ import {
 
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Loader } from "lucide-react";
+
 
 const Form = FormProvider;
 
@@ -21,7 +24,7 @@ type FormFieldContextValue<
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = {
     name: TName
-}
+};
 
 const FormFieldContext = React.createContext<FormFieldContextValue>(
     {} as FormFieldContextValue
@@ -65,7 +68,7 @@ const useFormField = () => {
 
 type FormItemContextValue = {
     id: string
-}
+};
 
 const FormItemContext = React.createContext<FormItemContextValue>(
     {} as FormItemContextValue
@@ -169,10 +172,10 @@ const FormRootError = React.forwardRef<
     HTMLParagraphElement,
     React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => {
-    const { errors } = useFormState()
-    const rootError = errors.root
+    const { errors } = useFormState();
+    const rootError = errors.root;
     if (!rootError) {
-        return null
+        return null;
     }
     return (
         <p
@@ -182,9 +185,26 @@ const FormRootError = React.forwardRef<
         >
             {rootError.message}
         </p>
-    )
-})
+    );
+});
 FormRootError.displayName = "FormRootError";
+
+const FormSubmitButton = React.forwardRef<
+    HTMLButtonElement,
+    React.HTMLAttributes<HTMLButtonElement>
+>(({ className, children, ...props }, ref) => {
+    const { isSubmitting } = useFormState();
+    return (
+        <Button className={cn("min-w-24", className)} disabled={isSubmitting} type="submit" {...props} >
+            {
+                isSubmitting
+                    ? <Loader size={18} className="animate-spin"/>
+                    : children
+            }
+        </Button>
+    );
+});
+FormSubmitButton.displayName = "Form Submit Button";
 
 export {
     useFormField,
@@ -195,5 +215,6 @@ export {
     FormDescription,
     FormMessage,
     FormRootError,
+    FormSubmitButton,
     FormField,
 };

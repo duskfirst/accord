@@ -8,7 +8,7 @@ import { createServerClient } from "@/utils/supabase/server";
 export const validateOTP = async ({ pin } : OTPSchema, email: string) => {
     const supabase  = createServerClient();
     const { 
-        data, error 
+        error 
     } = await supabase.auth.verifyOtp({
         email, token: pin, type: "email",
     });

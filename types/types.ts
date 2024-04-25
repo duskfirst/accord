@@ -4,8 +4,8 @@ export type Message = {
     time?: Date,
     text: string 
     id: string,
-}
+};
 
 export type Conversation = {
     "conversation" : Message[],
-}
+};

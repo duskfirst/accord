@@ -1,18 +1,16 @@
 "use server";
 
 import { createServerClient } from "@/utils/supabase/server";
-import { LoginSchema } from "./LoginSchema";
 import { redirect } from "next/navigation";
 
 
-export const login = async (values: LoginSchema) => {
+export const confirmEmail = async (email: string) => {
 
     const supabase = createServerClient();
     const {
-        data, error
-    } = await supabase.auth.signInWithPassword({
-        email: values.email,
-        password: values.password,
+        error
+    } = await supabase.auth.signInWithOtp({
+        email,
     });
 
     if (!error) {

@@ -2,7 +2,6 @@
 
 import { createServerClient } from "@/utils/supabase/server";
 import { RegisterSchema } from "./RegisterSchema";
-import { redirect } from "next/navigation";
 
 
 export const register = async (values: RegisterSchema) => {
@@ -20,10 +19,6 @@ export const register = async (values: RegisterSchema) => {
         },
     });
 
-    if (!error) {
-        redirect("/");
-    }
-
-    return error.message ;
+    return error?.message ;
 
 };

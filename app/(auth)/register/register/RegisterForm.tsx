@@ -4,7 +4,6 @@ import { RegisterSchema } from "./RegisterSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createBrowserClient } from "@/utils/supabase/client";
 
-import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -14,30 +13,25 @@ import {
     FormLabel,
     FormMessage,
     FormRootError,
+    FormSubmitButton,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { IconInput, PasswordInput } from "@/components/ui/input";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useDebounceCallback } from "usehooks-ts";
 
 import {
-    Eye,
-    EyeOff,
-    Lock,
     Mail,
     User,
-    LoaderCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { register } from "./register";
+import Link from "next/link";
+import { AuthContext } from "@/context/AuthContext";
 
 
-const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
-    emailValue: string,
-    setEmailValue: React.Dispatch<React.SetStateAction<string>>,
-    setIsValidEmail: React.Dispatch<React.SetStateAction<boolean>>,
-}) => {
+const RegisterForm = () => {
     
     const form = useForm<RegisterSchema>({
         resolver: zodResolver(RegisterSchema),
@@ -47,7 +41,7 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
             password: "",
         },
         mode: "onChange",
-        reValidateMode: "onSubmit",
+        reValidateMode: "onChange",
     });
     const {
         clearErrors,
@@ -60,7 +54,10 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
         trigger,
     } = form;
 
+    const [userEmail, setUserEmail] = useContext(AuthContext)!;
+
     const [usernameValue, setUsernameValue] = useState("");
+    const [emailValue, setEmailValue] = useState("");
     const [errorFlag, setErrorFlag] = useState(false);
     const errorFlagRef = useRef(errorFlag);
 
@@ -69,15 +66,9 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
     const usernameState = getFieldState("username", formState);
     const emailState = getFieldState("email", formState);
     const passwordState = getFieldState("password", formState);
-    const { isSubmitting } = formState;
 
     const usernameStateRef = useRef(usernameState);
     const emailStateRef = useRef(emailState);
-
-    const [showPassword, setShowPassword] = useState(false);
-    const toggleShowPassword = () => {
-        setShowPassword(show => !show);
-    };
 
     const onSubmit = async (values: RegisterSchema) => {
 
@@ -97,7 +88,7 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
         if (error) {
             setError("root", { message: error });
         } else {
-            setIsValidEmail(true);
+            setUserEmail(emailValue);
         }
     };
 
@@ -192,12 +183,10 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
                         <FormItem>
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                                <div className="relative flex items-center">
-                                    <Mail size={18} className={
-                                        cn("absolute left-2", emailState.isDirty && !emailState.isValidating && (emailState.invalid ? "text-destructive" : "text-success"))
-                                    } />
-                                    <Input placeholder="email address" {...field} type="email" className="px-8" onChange={event => handleChange(event, field.name)} />
-                                </div>
+                                <IconInput {...field}
+                                    pfx={<Mail size={18} className={cn(emailState.isDirty && (emailState.invalid ? "text-destructive" : "text-success"))} />}
+                                    placeholder="email address" type="email" onChange={event => handleChange(event, field.name)}
+                                />
                             </FormControl>
                             <FormDescription>
                                 Enter your email address
@@ -213,12 +202,10 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
                         <FormItem>
                             <FormLabel>Username</FormLabel>
                             <FormControl>
-                                <div className="relative flex items-center">
-                                    <User size={18} className={
-                                        cn("absolute left-2", usernameState.isDirty && (usernameState.invalid ? "text-destructive" : "text-success"))
-                                    } />
-                                    <Input placeholder="username" {...field} className="px-8" onChange={event => handleChange(event, field.name)} />
-                                </div>
+                                <IconInput {...field}
+                                    pfx={<User size={18} className={cn(usernameState.isDirty && (usernameState.invalid ? "text-destructive" : "text-success"))} />}
+                                    placeholder="username" onChange={event => handleChange(event, field.name)}
+                                />
                             </FormControl>
                             <FormDescription>
                                 Pick a unique username
@@ -234,20 +221,7 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
                         <FormItem>
                             <FormLabel>Password</FormLabel>
                             <FormControl>
-                                <div className="relative flex items-center">
-                                    <Lock size={18} className={
-                                        cn("absolute left-2", passwordState.isDirty && (passwordState.invalid ? "text-destructive" : "text-success"))
-                                    } />
-                                    <Input placeholder="password" {...field} type={showPassword ? "text" : "password"} className="px-8 min-w-72" onChange={event => handleChange(event, field.name)} />
-                                    {/* changing this to button instead of span will trigger form submission on click */}
-                                    <span className="absolute right-2 select-none cursor-pointer" onClick={toggleShowPassword}>
-                                        {
-                                            showPassword 
-                                                ? <EyeOff size={18}/>
-                                                : <Eye size={18}/>
-                                        }
-                                    </span>
-                                </div>
+                                <PasswordInput {...field} pfxClassname={cn(passwordState.isDirty && (passwordState.invalid ? "text-destructive" : "text-success"))} />
                             </FormControl>
                             <FormDescription>
                                 Enter a secure password
@@ -255,15 +229,16 @@ const RegisterForm = ({ emailValue, setEmailValue, setIsValidEmail } : {
                             <FormMessage />
                         </FormItem>
                     )}
-                    />
-                <FormRootError/>
-                <Button className="min-w-24" disabled={isSubmitting} type="submit">
-                    {
-                        isSubmitting
-                            ? <LoaderCircle size={18} className='animate-spin'/>
-                            : "Submit"
-                    }
-                </Button>
+                />
+                <FormRootError />
+                <div className="flex justify-between items-center">
+                    <FormSubmitButton>
+                        Register
+                    </FormSubmitButton>
+                    <Link href="/login" className="px-4 hover:text-slate-200 hover:underline">
+                        login
+                    </Link>
+                </div>
             </form>
         </Form>
     );

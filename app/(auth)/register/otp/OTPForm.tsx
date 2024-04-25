@@ -9,7 +9,6 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -19,18 +18,16 @@ import {
     FormLabel,
     FormMessage,
     FormRootError,
+    FormSubmitButton,
 } from "@/components/ui/form";
 
 import { OTPSchema } from "./OTPSchema";
 import { validateOTP } from "./validateOTP";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
 
-import { Loader } from "lucide-react";
 
-
-const OTPForm = ({ email } : {
-    email: string,
-    setIsValidEmail: React.Dispatch<React.SetStateAction<boolean>>,
-}) => {
+const OTPForm = () => {
 
     const OTPform = useForm<OTPSchema>({
         resolver: zodResolver(OTPSchema),
@@ -41,10 +38,11 @@ const OTPForm = ({ email } : {
 
     const {
         control,
-        formState: { isSubmitting },
         handleSubmit,
         setError,
     } = OTPform;
+
+    const [email, setEmail] = useContext(AuthContext)!;
 
     const validate = async (values: OTPSchema) => {
         const error = await validateOTP(values, email);
@@ -81,13 +79,9 @@ const OTPForm = ({ email } : {
                     )}
                 />
                 <FormRootError />
-                <Button className="min-w-24" disabled={isSubmitting} type="submit">
-                    {
-                        isSubmitting
-                            ? <Loader size={18} className='animate-spin'/>
-                            : "Submit"
-                    }
-                </Button>
+                <FormSubmitButton>
+                    Verify Email
+                </FormSubmitButton>
             </form>
         </Form>
     );

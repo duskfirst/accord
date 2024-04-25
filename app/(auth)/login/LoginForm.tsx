@@ -3,7 +3,6 @@
 import { LoginSchema } from "./LoginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -13,21 +12,20 @@ import {
     FormLabel,
     FormMessage,
     FormRootError,
+    FormSubmitButton,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { IconInput, PasswordInput } from "@/components/ui/input";
 
-import { useState } from "react";
+import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-import {
-    Eye,
-    EyeOff,
-    Lock,
-    Mail,
-    LoaderCircle
-} from "lucide-react";
+import { Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { login } from "./login";
+
+import Link from "next/link";
+import { AuthContext } from "@/context/AuthContext";
+import { confirmEmail } from "./confirm-email";
 
 
 const LoginForm = () => {
@@ -39,37 +37,44 @@ const LoginForm = () => {
             password: "",
         },
         mode: "onChange",
-        reValidateMode: "onSubmit",
+        reValidateMode: "onChange",
     });
     const {
         formState,
         getFieldState,
         handleSubmit,
         setError,
+        clearErrors,
     } = form;
 
     const emailState = getFieldState("email");
     const passwordState = getFieldState("password");
 
-    const { isSubmitting } = formState;
-
-    const [showPassword, setShowPassword] = useState(false);
-    const toggleShowPassword = () => {
-        setShowPassword(show => !show);
-    };
-
+    const [email, setEmail] = useContext(AuthContext)!;
+    
     const onSubmit = async (values: LoginSchema) => {
-
-        const error = await login(values);
+        let error = await login(values);
         if (error) {
+            if (error === "Email not confirmed") {
+                setEmail(values.email);
+                error = await confirmEmail(values.email);
+                if (!error) {
+                    window.location.href = "/register";
+                }
+            }
             setError("root", { message: error });
-        }    
-
+        }
     };
+    
+    const { isValidating } = formState;
+    // remove the root error when the user starts typing
+    useEffect(() => {
+        clearErrors("root");
+    }, [isValidating]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <Form {...form}>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 ">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                 <FormField
                     control={form.control}
                     name="email"
@@ -77,12 +82,10 @@ const LoginForm = () => {
                         <FormItem>
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                                <div className="relative flex items-center">
-                                    <Mail size={18} className={
-                                        cn("absolute left-2", emailState.isDirty && emailState.invalid && "text-destructive")
-                                    } />
-                                    <Input placeholder="email address" {...field} type="email" className="px-8" />
-                                </div>
+                                <IconInput {...field}
+                                    pfx={<Mail size={18} className={cn(emailState.invalid && "text-destructive")} />}
+                                    type="email" placeholder="email address" {...field}
+                                />
                             </FormControl>
                             <FormDescription>
                                 Enter your email address
@@ -98,36 +101,24 @@ const LoginForm = () => {
                         <FormItem>
                             <FormLabel>Password</FormLabel>
                             <FormControl>
-                                <div className="relative flex items-center">
-                                    <Lock size={18} className={
-                                        cn("absolute left-2", passwordState.isDirty && passwordState.invalid && "text-destructive")
-                                    } />
-                                    <Input placeholder="password" {...field} type={showPassword ? "text" : "password"} className="px-8 min-w-72" />
-                                    {/* changing this to button instead of span will trigger form submission on click */}
-                                    <span className="absolute right-2 cursor-pointer select-none" onClick={toggleShowPassword}>
-                                        {
-                                            showPassword
-                                                ? <EyeOff size={18} />
-                                                : <Eye size={18} />
-                                        }
-                                    </span>
-                                </div>
+                                <PasswordInput {...field} pfxClassname={cn(passwordState.invalid && "text-destructive" )} />
                             </FormControl>
                             <FormDescription>
-                                Enter a secure password
+                                Enter your password
                             </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
-                    />
-                <FormRootError/>
-                <Button className="min-w-24" disabled={isSubmitting} type="submit">
-                    {
-                        isSubmitting
-                            ? <LoaderCircle size={18} className='animate-spin' />
-                            : "Submit"
-                    }
-                </Button>
+                />
+                <FormRootError />
+                <div className="flex justify-between items-center">
+                    <FormSubmitButton>
+                        Login
+                    </FormSubmitButton>
+                    <Link href="/register" className="px-4 hover:text-slate-200 hover:underline">
+                        register
+                    </Link>
+                </div>
             </form>
         </Form>
     );

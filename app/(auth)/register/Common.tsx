@@ -2,17 +2,16 @@
 
 import RegisterForm from "./register/RegisterForm";
 import OTPForm from "./otp/OTPForm";
-import { useState } from "react";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
 
 // need to rename
 const Common = () => {
 
-    const [emailValue, setEmailValue] = useState("");
-    const [isValidEmail, setIsValidEmail] = useState(false);
+    const [ email, setEmail ] = useContext(AuthContext)!;
 
     return (
-        isValidEmail && emailValue ? <OTPForm email={emailValue} />
-            : <RegisterForm  emailValue={emailValue} setEmailValue={setEmailValue} setIsValidEmail={setIsValidEmail} />
+        email ? <OTPForm /> : <RegisterForm />
     );
 };
 

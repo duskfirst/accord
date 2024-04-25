@@ -2,20 +2,26 @@
     "extends": "next/core-web-vitals",
     "parser": "@typescript-eslint/parser",
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "@stylistic/eslint-plugin",
+        "@stylistic/eslint-plugin-jsx"
     ],
     "rules": {
-        "semi": [
+        "@stylistic/semi": [
             "warn",
             "always"
         ],
-        "indent": [
+        "@stylistic/indent": [
             "warn",
             4
         ],
-        "quotes": [
+        "@stylistic/quotes": [
             "warn",
             "double"
+        ],
+        "@stylistic/jsx-quotes": [
+            "warn",
+            "prefer-double"
         ]
     }
 }
