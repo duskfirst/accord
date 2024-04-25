@@ -1,7 +1,7 @@
-"use client";
-import { File, SendHorizontal, Smile, X } from "lucide-react";
-import { Button } from "./ui/button";
-import { LegacyRef } from "react";
+"use client";;
+import { File, SendHorizontal, Smile, X } from "lucide-react";;
+import { Button } from "./ui/button";;
+import { LegacyRef } from "react";;
 
 interface Props {
     onClick: () => void,

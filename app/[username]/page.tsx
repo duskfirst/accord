@@ -2,9 +2,12 @@
 import Chats from "@/components/Chats";
 import FriendList from "@/components/FriendList";
 import Sidenav from "@/components/Sidenav";
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import {
+    ResizableHandle,
+    ResizablePanel,
+    ResizablePanelGroup,
+} from "@/components/ui/resizable";
 import { useState } from "react";
-
 
 const Page = ({ params }: { params: { username: string } }) => {
     const [receiver, setReceiver] = useState("Ethan");
