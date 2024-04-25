@@ -6,7 +6,7 @@ interface Props {
     sideOpen: boolean,
     buttonClassname: string
     onClick: () => void
-}
+};
 
 const SideButton = ({ sideOpen, buttonClassname, onClick }: Props) => {
 

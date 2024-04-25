@@ -103,3 +103,8 @@ html {
     filter: brightness(10);
     background: #cccaca;
 }
+
+.EmojiPickerReact.epr-dark-theme {
+    --epr-bg-color: var(--background);
+    --epr-category-label-bg-color: var(var(--background));
+}
