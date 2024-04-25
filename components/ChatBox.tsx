@@ -1,10 +1,12 @@
 import { Message } from "@/types/types";
+import { useEffect } from "react";
 
 interface Props {
     msg: Message,
     user: string,
 }
 const MessageBox = ({ msg, user }: Props) => {
+
 
     return (
         <div className={msg.sender == user ? "flex flex-col text-background overflow-hidden m-2 rounded-l-lg rounded-bl-none" : "flex flex-col m-2 text-background overflow-hidden rounded-r-lg rounded-br-none"} >
