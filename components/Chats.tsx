@@ -236,10 +236,10 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
     const [emojiActive, setEmojiActive] = useState(false);
     const listRef = useRef<HTMLLIElement>(null);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
-    const [emoji, setEmoji] = useState('');
+    const [emoji, setEmoji] = useState("");
     const [messages, setMessages] = useState<Message[]>(convo.conversation);
     const [isFile, setIsFile] = useState(false);
-    const [inputVal, setInputVal] = useState('');
+    const [inputVal, setInputVal] = useState("");
     const [fileVal, setFile] = useState<File | undefined>(undefined);
 
 
@@ -275,15 +275,15 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
         }
 
         onSend(inputVal, "Bob");
-        setInputVal('');
+        setInputVal("");
         setFile(undefined);
     };
 
     const onEnterClick = (e: KeyboardEvent) => {
-        if (inputVal === '')
+        if (inputVal === "")
             return;
         const key = e?.key;
-        if (key === 'Enter' && e?.ctrlKey)
+        if (key === "Enter" && e?.ctrlKey)
             onClick();
     };
 
@@ -293,7 +293,7 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
 
     useEffect(() => {
         setInputVal(inputVal => inputVal + emoji);
-        setEmoji('');
+        setEmoji("");
     }, [emoji]);
 
     const onFileChange = (e: any) => {
