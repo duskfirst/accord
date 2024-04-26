@@ -274,9 +274,10 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
 
         }
 
-        onSend(inputVal, "Bob");
+        onSend(inputVal, receiver);
         setInputVal('');
         setFile(undefined);
+        setIsFile(false);
     };
 
     const onEnterClick = (e: KeyboardEvent) => {
@@ -304,8 +305,10 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
         }
     };
 
+
+
     return (
-        <div className="h-full w-full flex flex-col p-1">
+        <div className="h-full w-full flex flex-col p-1 bg-gradient">
             <div className="border m-1 h-12 shrink-0 p-1  grid grid-cols-3 md:flex items-center content-start">
 
                 <SidePop receiver={receiver} setReceiver={setReceiver} className=" md:hidden " />
