@@ -9,4 +9,4 @@ export type Message = {
 
 export type Conversation = {
     "conversation" : Message[],
-}
+};

@@ -1,14 +1,34 @@
-import Sidenav from "@/components/Sidenav";
-import Image from "next/image";
+import { createServerClient } from "@/utils/supabase/server";
+import Link from "next/link";
 
-export default function Home() {
+const UserPage = () => {
     return (
-        <>
-            <div>
-                <main className="flex min-h-screen flex-col items-center justify-between p-24">
-          HOME
-                </main>
-            </div>
-        </>
+        <div>
+            user page
+        </div>
     );
+};
+
+const HomePage = () => {
+    return (
+        <div>
+            <div>
+                home page
+            </div>
+            <Link href={"/login"} >Login</Link>
+        </div>
+    );
+};
+
+export default async function Home() {
+    const supabase = createServerClient();
+    const {
+        data: { user }
+    } = await supabase.auth.getUser();
+
+    if (user) {
+        return <UserPage />;
+    } else {
+        return <HomePage />;
+    }
 }
