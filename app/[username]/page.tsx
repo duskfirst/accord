@@ -24,7 +24,7 @@ const Page = ({ params }: { params: { username: string } }) => {
                     </div>
                 </ div >
                 <ResizablePanel defaultSize={25} minSize={15} className="hidden md:flex">
-                    <Sidenav className="border flex items-center  justify-center w-1/12 h-full" />
+                    <Sidenav />
                     <FriendList receiver={receiver} setReceiver={setReceiver} className="border flex items-center justify-center w-11/12 h-full" />
                 </ResizablePanel>
                 <ResizableHandle />

@@ -31,7 +31,7 @@ const FriendList = ({ className, setReceiver, receiver }: Props) => {
 
                     <li
                         key={user.id + "FriendList"}
-                        className={"flex flex-col text-left hover:bg-muted pl-4 rounded-md self-end m-2" + ((receiver === user.receiver) ? "bg-muted" : '')}
+                        className={"flex flex-col text-left hover:bg-muted pl-4 rounded-md self-end m-2" + ((receiver === user.receiver) ? "bg-muted" : "")}
                         onClick={() => setReceiver(user.username)}
                     >
                         <div className="flex text-left items-center justify-start relative self-start gap-2 m-2 w-full" >
