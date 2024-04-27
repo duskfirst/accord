@@ -15,7 +15,7 @@ const Sidenav = () => {
                 </Link>
                 <LogOut
                     className="hover:bg-zinc-600 rounded-sm"
-                    onClick={signout}
+                    onClick={() => signout()} /* an event is passed to the callback function on click but a server action will not accept it */
                 />
             </div>
         </div>

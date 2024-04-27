@@ -40,7 +40,7 @@ Under `Authentication > Configuration > Email Templates`
     Your confirmation code is <span class='font-size: 3rem'><b>{{ .Token }}</b></span>
     ```
 
-> **NOTE:** It is important that you have `{{ .Token }}` in the email body or the user will not receive the OTP. The built-in email service has a rate limit of [3 per hour](https://supabase.com/docs/guides/platform/going-into-prod#auth-rate-limits). Setup a custom SMTP server if you are planning on having a large number of users. 
+> **NOTE:** It is important that you have `{{ .Token }}` in the email body or the user will not receive the OTP. The built-in email service has a rate limit of [3 per hour](https://supabase.com/docs/guides/platform/going-into-prod#auth-rate-limits). Setup a custom SMTP server if you are planning on having a large number of users under `Project Settings > Configuration > Authentication > SMTP Settings`
 
 #### Tables
 
@@ -91,18 +91,18 @@ begin
 end;
 $$;
 
-create function public.email_confirmed_at_fn() 
+create or replace function email_confirmed_at_fn()
 returns trigger
 language plpgsql
 security definer set search_path = public
 as $$
 begin
-    update public.profiles set profiles.email_confirmed_at = new.email_confirmed_at where profiles.id = new.id;
+    update public.profiles set email_confirmed_at = new.email_confirmed_at where id = new.id;
     return new;
 end;
 $$;
 
-create trigger email_confirmed_at_trigger after update
+create or replace trigger email_confirmed_at_trigger after update
     on auth.users
     for each row
     when (old.email_confirmed_at is distinct from new.email_confirmed_at)
