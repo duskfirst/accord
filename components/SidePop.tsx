@@ -18,7 +18,7 @@ const SidePop = ({ className, setReceiver, receiver }: Props) => (
             </Button>
         </SheetTrigger>
         <SheetContent side="left" className="flex p-2 gap-1 w-full max-h-full">
-            <Sidenav className="w-10" />
+            <Sidenav />
             <FriendList receiver={receiver} setReceiver={setReceiver} className="flex-grow border" />
         </SheetContent>
     </Sheet>

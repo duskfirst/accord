@@ -18,12 +18,12 @@ npm i
 
 - Create a new project [here](https://supabase.com/dashboard/projects)
 
-- Under `Project Settings > API > API Settings`, copy your project url and anon public key and save them in `env.local`
+- Under `Project Settings > API > API Settings`, copy your project url, `anon` and `service_role` keys and save them in `env.local`
 
 ```
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_URL=your_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-SUPABASE_SECRET_KEY=your_secret_key
+SUPABASE_SECRET_KEY=your_service_role_key
 ```
 
 #### Email Templates
@@ -42,9 +42,9 @@ Under `Authentication > Configuration > Email Templates`
 
 > **NOTE:** It is important that you have `{{ .Token }}` in the email body or the user will not receive the OTP. The built-in email service has a rate limit of [3 per hour](https://supabase.com/docs/guides/platform/going-into-prod#auth-rate-limits). Setup a custom SMTP server if you are planning on having a large number of users under `Project Settings > Configuration > Authentication > SMTP Settings`
 
-#### Tables
+#### Database Setup
 
-##### `profiles`
+Run the following code in the `SQL Editor`
 
 ```sql
 
