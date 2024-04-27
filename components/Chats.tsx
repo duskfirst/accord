@@ -268,13 +268,12 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
     };
 
     const onClick = () => {
-        console.log(fileVal);
-
-        if (fileVal === undefined) {
-
+        if (fileVal) {
+            onSend(inputVal, receiver, fileVal);
         }
-
-        onSend(inputVal, receiver);
+        else {
+            onSend(inputVal, receiver);
+        }
         setInputVal('');
         setFile(undefined);
         setIsFile(false);

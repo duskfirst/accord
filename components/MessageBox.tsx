@@ -1,6 +1,7 @@
 import { Message } from "@/types/types";
 import Image from "next/image";
 import FileDisplay from "./FileDisplay";
+import { useEffect } from "react";
 interface Props {
     msg: Message,
     user: string,
@@ -8,7 +9,7 @@ interface Props {
 const MessageBox = ({ msg, user }: Props) => {
 
     const date = new Date();
-    console.log(msg.file);
+
     return (
         <div className={msg.sender == user ? "flex flex-col text-background overflow-hidden m-2 rounded-l-lg rounded-bl-none" : "flex flex-col m-2 text-background overflow-hidden rounded-r-lg rounded-br-none"} >
 
@@ -21,7 +22,7 @@ const MessageBox = ({ msg, user }: Props) => {
                         {msg.sender == user ? "You" : msg.sender}
                     </span>
                     <div className="text-wrap whitespace-pre-line p-1">
-                        {msg.file === undefined ? msg.text : <FileDisplay file={msg.file} />}
+                        {<FileDisplay file={msg.file} />}
                     </div>
                     <span className="w-full text-end text-xs mt-2">
                         {date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + "\t" + date.getHours() + ":" + date.getMinutes()}
