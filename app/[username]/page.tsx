@@ -1,39 +1,30 @@
-"use client";
-import Chats from "@/components/Chats";
-import FriendList from "@/components/FriendList";
-import Sidenav from "@/components/Sidenav";
-import {
-    ResizableHandle,
-    ResizablePanel,
-    ResizablePanelGroup,
-} from "@/components/ui/resizable";
-import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
-const Page = ({ params }: { params: { username: string } }) => {
-    const [receiver, setReceiver] = useState("Ethan");
-
+const Page = () => {
     return (
-        <>
-            <ResizablePanelGroup
-                direction="horizontal"
-                className="h-full w-full border hidden"
-            >
-                <div className="h-full w-full flex md:hidden">
-                    <div className="border flex items-center w-full md:w-2/3 justify-center flex-grow h-full" >
-                        <Chats receiver={receiver} setReceiver={setReceiver} username={params.username} />
-                    </div>
-                </ div >
-                <ResizablePanel defaultSize={25} minSize={15} className="hidden md:flex">
-                    <Sidenav />
-                    <FriendList receiver={receiver} setReceiver={setReceiver} className="border flex items-center justify-center w-11/12 h-full" />
-                </ResizablePanel>
-                <ResizableHandle />
-                <ResizablePanel defaultSize={75} minSize={40} className=" h-full justify-center hidden md:flex items-center">
-                    <Chats receiver={receiver} setReceiver={setReceiver} username={params.username} />
-
-                </ResizablePanel>
-            </ResizablePanelGroup>
-        </>
+        <div className="flex flex-col h-full justify-center gap-8 items-center">
+            <Avatar className="size-40">
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>Profile Picture</AvatarFallback>
+            </Avatar>
+            <Card className="border-2 bg-zinc-800">
+                <CardHeader>
+                    <CardTitle>Profile Details</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-4">
+                    <p className="border-2 rounded-lg p-2 w-full">
+            Username: username_placeholder
+                    </p>
+                    <Separator />
+                    <p className="border-2 rounded-lg p-2 w-full">
+            About: about_placeholder
+                    </p>
+                </CardContent>
+            </Card>
+        </div>
     );
 };
+
 export default Page;
