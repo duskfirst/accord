@@ -8,30 +8,34 @@ import {
     FieldValues,
     FormProvider,
     useFormContext,
+    useFormState,
 } from "react-hook-form";
 
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Loader } from "lucide-react";
+
 
 const Form = FormProvider;
 
 type FormFieldContextValue<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+    TFieldValues extends FieldValues = FieldValues,
+    TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = {
-  name: TName
-}
+    name: TName
+};
 
 const FormFieldContext = React.createContext<FormFieldContextValue>(
-  {} as FormFieldContextValue
+    {} as FormFieldContextValue
 );
 
 const FormField = <
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+    TFieldValues extends FieldValues = FieldValues,
+    TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >({
-        ...props
-    }: ControllerProps<TFieldValues, TName>) => {
+    ...props
+}: ControllerProps<TFieldValues, TName>) => {
     return (
         <FormFieldContext.Provider value={{ name: props.name }}>
             <Controller {...props} />
@@ -63,16 +67,16 @@ const useFormField = () => {
 };
 
 type FormItemContextValue = {
-  id: string
-}
+    id: string
+};
 
 const FormItemContext = React.createContext<FormItemContextValue>(
-  {} as FormItemContextValue
+    {} as FormItemContextValue
 );
 
 const FormItem = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
+    HTMLDivElement,
+    React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
     const id = React.useId();
 
@@ -85,15 +89,15 @@ const FormItem = React.forwardRef<
 FormItem.displayName = "FormItem";
 
 const FormLabel = React.forwardRef<
-  React.ElementRef<typeof LabelPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
+    React.ElementRef<typeof LabelPrimitive.Root>,
+    React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
 >(({ className, ...props }, ref) => {
-    const { error, formItemId } = useFormField();
+    const { formItemId } = useFormField();
 
     return (
         <Label
             ref={ref}
-            className={cn(error && "text-destructive", className)}
+            className={cn(className)}
             htmlFor={formItemId}
             {...props}
         />
@@ -102,8 +106,8 @@ const FormLabel = React.forwardRef<
 FormLabel.displayName = "FormLabel";
 
 const FormControl = React.forwardRef<
-  React.ElementRef<typeof Slot>,
-  React.ComponentPropsWithoutRef<typeof Slot>
+    React.ElementRef<typeof Slot>,
+    React.ComponentPropsWithoutRef<typeof Slot>
 >(({ ...props }, ref) => {
     const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
 
@@ -124,8 +128,8 @@ const FormControl = React.forwardRef<
 FormControl.displayName = "FormControl";
 
 const FormDescription = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
+    HTMLParagraphElement,
+    React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => {
     const { formDescriptionId } = useFormField();
 
@@ -141,8 +145,8 @@ const FormDescription = React.forwardRef<
 FormDescription.displayName = "FormDescription";
 
 const FormMessage = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
+    HTMLParagraphElement,
+    React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
     const { error, formMessageId } = useFormField();
     const body = error ? String(error?.message) : children;
@@ -164,6 +168,44 @@ const FormMessage = React.forwardRef<
 });
 FormMessage.displayName = "FormMessage";
 
+const FormRootError = React.forwardRef<
+    HTMLParagraphElement,
+    React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => {
+    const { errors } = useFormState();
+    const rootError = errors.root;
+    if (!rootError) {
+        return null;
+    }
+    return (
+        <p
+            ref={ref}
+            className={cn("text-[0.8rem] font-medium text-destructive", className)}
+            {...props}
+        >
+            {rootError.message}
+        </p>
+    );
+});
+FormRootError.displayName = "FormRootError";
+
+const FormSubmitButton = React.forwardRef<
+    HTMLButtonElement,
+    React.HTMLAttributes<HTMLButtonElement>
+>(({ className, children, ...props }, ref) => {
+    const { isSubmitting } = useFormState();
+    return (
+        <Button className={cn("min-w-24", className)} disabled={isSubmitting} type="submit" {...props} >
+            {
+                isSubmitting
+                    ? <Loader size={18} className="animate-spin"/>
+                    : children
+            }
+        </Button>
+    );
+});
+FormSubmitButton.displayName = "Form Submit Button";
+
 export {
     useFormField,
     Form,
@@ -172,5 +214,7 @@ export {
     FormControl,
     FormDescription,
     FormMessage,
+    FormRootError,
+    FormSubmitButton,
     FormField,
 };

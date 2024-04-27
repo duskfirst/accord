@@ -11,31 +11,24 @@ const MessageBox = ({ msg, user }: Props) => {
     const date = new Date();
 
     return (
-        <div className={msg.sender == user ? "flex flex-col text-background overflow-hidden m-2 rounded-l-lg rounded-bl-none" : "flex flex-col m-2 text-background overflow-hidden rounded-r-lg rounded-br-none"} >
-
-            < div className={msg.sender == user ? "bg-accent flex items-start p-2 ps-3 min-w-12 gap-2 rounded-t-lg rounded-bl-lg" : "bg-accent items-start flex gap-2 p-2 ps-3 min-w-12 rounded-t-lg rounded-br-lg"}>
-                <div>
-                    <Image src={"https://via.placeholder.com/150"} width={40} height={40} className="rounded-full" alt={""} />
-                </div>
-                <div className="text-start text-foreground mb-1 flex flex-col  max-w-lg">
+        <div className={"flex items-start p-2 ps-3 min-w-12 gap-2 hover:bg-accent"}>
+            <div>
+                <Image src={"https://via.placeholder.com/150"} width={40} height={40} className="rounded-full" alt={""} />
+            </div>
+            <div className="text-start text-foreground mb-1 flex flex-col w-full">
+                <div className="flex min-w-fit w-2/3 justify-between">
                     <span className="font-bold text-start">
                         {msg.sender == user ? "You" : msg.sender}
                     </span>
-                    <div className="text-wrap whitespace-pre-line p-1">
-                        {<FileDisplay file={msg.file} />}
-                    </div>
-                    <span className="w-full text-end text-xs mt-2">
-                        {date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + "\t" + date.getHours() + ":" + date.getMinutes()}
+                    <span className="w-full text-end text-slate-300 text-xs mt-2">
+                        {date.toString().substring(0, date.toString().length - 34)}
                     </span>
-                </div >
-            </div>
-            {
-                <div className="bg-accent h-5">
-                    <div className={msg.sender == user ? "bg-background w-full h-full rounded-tr-full " : "bg-background w-full h-full rounded-tl-full"}>
-                    </div>
                 </div>
-            }
-        </ div >
+                <div className="text-wrap whitespace-pre-line">
+                    {msg.file ? <FileDisplay file={msg.file} /> : msg.text}
+                </div>
+            </div >
+        </div>
     );
 };
 export default MessageBox;

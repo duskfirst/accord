@@ -28,6 +28,9 @@
         --destructive: 0 84.2% 60.2%;
         --destructive-foreground: 210 20% 98%;
 
+        --success: 142, 77%, 53%;
+        --success-foreground: 142, 77%, 40%;
+
         --border: 220 13% 91%;
         --input: 220 13% 91%;
         --ring: 224 71.4% 4.1%;
@@ -110,4 +113,24 @@ html {
 .EmojiPickerReact.epr-dark-theme {
     --epr-bg-color: var(--background);
     --epr-category-label-bg-color: var(var(--background));
+}
+input {
+    /* Resetting margins */
+    margin: 0;
+    /* Resetting paddings */
+    padding: 0;
+    /* Resetting border */
+    border: none;
+    /* Resetting outline */
+    outline: none;
+    /* Resetting background */
+    background: none;
+    /* Resetting font */
+    font: inherit;
+    /* Resetting box-sizing */
+    box-sizing: border-box;
+    /* Resetting appearance */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }

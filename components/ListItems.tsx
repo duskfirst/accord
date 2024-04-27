@@ -18,8 +18,8 @@ const ListItem = ({ conversation, user, listRef, receiver }: Props) => {
                 <li
                     className={
                         (convo.sender == user)
-                            ? "text-left self-end m-2 w-fit"
-                            : "text-left self-start m-2 w-fit"
+                            ? "text-left self-start m-2 w-full"
+                            : "text-left self-start m-2 w-full"
                     }
                     key={convo.id}
                     ref={

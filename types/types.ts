@@ -5,8 +5,8 @@ export type Message = {
     text?: string 
     id: string,
     file?: File,
-}
+};
 
 export type Conversation = {
     "conversation" : Message[],
-}
+};
