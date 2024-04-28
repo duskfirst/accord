@@ -2,7 +2,6 @@
 
 import { createServerClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import Auth from "./Auth";
 
 
 const AuthLayout = async ({ children } : { children: React.ReactNode }) => {
@@ -13,9 +12,7 @@ const AuthLayout = async ({ children } : { children: React.ReactNode }) => {
     }
     return (
         <div className="flex items-center justify-center h-full w-full">
-            <Auth>
-                { children }
-            </Auth>
+            { children }
         </div>
     );
 };
