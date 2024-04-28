@@ -23,11 +23,13 @@ import {
 
 import { OTPSchema } from "./OTPSchema";
 import { validateOTP } from "./validateOTP";
-import { useContext } from "react";
-import { AuthContext } from "@/context/AuthContext";
 
 
-const OTPForm = () => {
+const OTPForm = ({
+    email
+} : {
+    email: string
+}) => {
 
     const OTPform = useForm<OTPSchema>({
         resolver: zodResolver(OTPSchema),
@@ -42,13 +44,11 @@ const OTPForm = () => {
         setError,
     } = OTPform;
 
-    const [email, setEmail] = useContext(AuthContext)!;
-
+    
     const validate = async (values: OTPSchema) => {
-        const error = await validateOTP(values, email);
-        if (error) {
-            setError("pin", { message: error }, { shouldFocus: true });
-        }
+        const message = await validateOTP(values, email);
+        if (message)
+            setError("pin", { message }, { shouldFocus: true });
     };
     return (
         <Form {...OTPform}>

@@ -1,12 +1,12 @@
 "use server";
 
-import { createServerClient } from "@/utils/supabase/server";
 import { RegisterSchema } from "./RegisterSchema";
+import { createServiceClient } from "@/utils/supabase/service-role";
 
 
 export const register = async ({ email, password, username }: RegisterSchema) => {
 
-    const supabase = createServerClient();
+    const supabase = createServiceClient();
     const {
         data, error
     } = await supabase.auth.signUp({

@@ -55,7 +55,6 @@ create extension if not exists citext;
 create table profiles (
     id uuid references auth.users on delete cascade not null primary key,
     email varchar(255) not null unique,
-    updated_at timestamp with time zone,
     username citext unique,
     display_name text,
     avatar_url text,
@@ -71,6 +70,10 @@ alter table profiles
 
 create policy "Public profiles are viewable by everyone." on profiles
     for select using (true);
+
+-- However email and email_confirmed_at should not be seen by anon
+revoke update, select, delete on table public.profiles from anon;
+grant select(avatar_url, display_name, id, username, website) on table public.profiles to anon;
 
 create policy "Users can insert their own profile." on profiles
     for insert with check ((select auth.uid()) = id);
