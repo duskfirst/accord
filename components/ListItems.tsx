@@ -16,11 +16,8 @@ const ListItem = ({ conversation, user, listRef, receiver }: Props) => {
         <ul className="p-2 flex flex-col justify-end h-full scroll-auto w-full">
             {filteredConvo?.map((convo: Message) => (
                 <li
-                    className={
-                        (convo.sender == user)
-                            ? "text-left self-start m-2 w-full"
-                            : "text-left self-start m-2 w-full"
-                    }
+                    className="text-left self-start m-2 w-full"
+
                     key={convo.id}
                     ref={
                         filteredConvo[filteredConvo.length - 1] === convo

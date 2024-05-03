@@ -13,14 +13,14 @@ const MessageBox = ({ msg, user }: Props) => {
     return (
         <div className={"flex items-start p-2 ps-3 min-w-12 gap-2 hover:bg-accent"}>
             <div>
-                <Image src={"https://via.placeholder.com/150"} width={40} height={40} className="rounded-full" alt={""} />
+                <Image src={"https://via.placeholder.com/150"} width={35} height={35} className="rounded-full" alt={""} />
             </div>
             <div className="text-start text-foreground mb-1 flex flex-col w-full">
-                <div className="flex min-w-fit w-2/3 justify-between">
-                    <span className="font-bold text-start">
+                <div className="flex min-w-fit w-2/3 justify-start gap-4 items-baseline">
+                    <span className="font-bold text-md align-middle text-start">
                         {msg.sender == user ? "You" : msg.sender}
                     </span>
-                    <span className="w-full text-end text-slate-300 text-xs mt-2">
+                    <span className="text-slate-300 min-w-20 text-wrap text-xs mt-2">
                         {date.toString().substring(0, date.toString().length - 34)}
                     </span>
                 </div>

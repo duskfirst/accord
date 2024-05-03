@@ -1,10 +1,10 @@
 "use client";
 import Image from "next/image";
-import { File } from "lucide-react";
-import { Card, CardContent, CardHeader } from "./ui/card";
-import { useEffect, useRef, useState } from "react";
+import { Download, FileDown } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
-import AudioPlayer from "./AudioPlayer";
+import ReactAudioPlayer from "react-audio-player";
+import Link from "next/link";
 
 interface Props {
     file: File | undefined,
@@ -14,10 +14,9 @@ const FileDisplay = ({ file }: Props) => {
     const [objectUrl, setObjectUrl] = useState("https://via.placeholder.com/150");
 
     useEffect(() => {
-        if ((file?.type.split("/")[0] === "image" || file?.type.split("/")[0] === "video" || file?.type.split("/")[0] === "gif" || file?.type.split("/")[0] === "audio") && file) {
+        if (file) {
             const url = URL.createObjectURL(file);
             setObjectUrl(url);
-            console.log(file);
         }
     }, []);
 
@@ -26,8 +25,9 @@ const FileDisplay = ({ file }: Props) => {
         case "gif":
             return (
 
-                < div className="w-max p-2 flex flex-col rounded-md items-start bg-accent" >
-                    <span className="pb-1">{file?.name}</span>
+                < div className="w-max p-2 gap-2 flex flex-col rounded-md items-start bg-accent" >
+                    <span className="pb-1 flex justify-between gap-4">{file?.name}
+                    </span>
                     {
                         <Dialog >
                             <DialogTrigger>
@@ -46,10 +46,8 @@ const FileDisplay = ({ file }: Props) => {
 
                 < div className="w-max p-2 flex flex-col rounded-md items-start bg-accent" >
                     <span className="pb-1">{file?.name}</span>
-                    {
-                        <video src={objectUrl} controls />
-
-                    }
+                    <video src={objectUrl} controls >
+                    </video>
                 </div >
             );
             break;
@@ -59,7 +57,7 @@ const FileDisplay = ({ file }: Props) => {
 
                 < div className="w-max p-2 flex flex-col rounded-md items-start bg-accent" >
                     <span className="pb-1">{file?.name}</span>
-                    <AudioPlayer src={objectUrl} />
+                    <ReactAudioPlayer src={objectUrl} controls />
                 </div >
             );
             break;
@@ -68,7 +66,9 @@ const FileDisplay = ({ file }: Props) => {
 
                 <div className="w-max p-4 gap-4 flex rounded-md items-start bg-accent">
                     <span className="pb-1">{file?.name}</span>
-                    <File />
+                    <Link href={objectUrl} download={file?.name} >
+                        <FileDown />
+                    </Link>
                 </div >
             );
             break;

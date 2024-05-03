@@ -4,8 +4,10 @@ import MessageInput from "./MessageInput";
 import SidePop from "./SidePop";
 import { useEffect, useRef, useState } from "react";
 import EmojiPicker, { EmojiStyle, SuggestionMode, Theme } from "emoji-picker-react";
-import { Import, User } from "lucide-react";
+import { User } from "lucide-react";
 import { Label } from "./ui/label";
+import { FaFileUpload, FaUpload } from "react-icons/fa";
+
 
 const convo: Conversation = {
     "conversation": [
@@ -229,7 +231,15 @@ const convo: Conversation = {
     ]
 };
 
-
+for (let i = 0; i < 100; i++) {
+    convo.conversation.push({
+        "sender": "Ethan",
+        "receiver": "Alice",
+        "time": new Date(),
+        "text": ("asdsd"),
+        id: (i + 100).toString(),
+    });
+}
 
 const Chats = ({ username, setReceiver, receiver }: { receiver: string, username: string, setReceiver: (data: string) => void }) => {
 
@@ -337,9 +347,9 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
             }
             {isFile &&
                 <div className="w-full h-3/4 border border-dashed rounded-md">
-                    <Label htmlFor="fileUpload" className="h-full w-full flex flex-col items-center justify-center">
+                    <Label htmlFor="fileUpload" className="h-full w-full gap-2 flex flex-col items-center justify-center">
+                        <FaUpload className="w-44 h-44 mb-2" />
                         <span className="text-xl ">Upload A File</span>
-                        <Import className="relative size-40" />
                     </Label>
                     <input id="fileUpload" type="file" className="w-0 h-0 hover:cursor-pointer" onChange={onFileChange} />
                 </div>
