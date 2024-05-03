@@ -7,8 +7,8 @@ import EmojiPicker, { EmojiStyle, SuggestionMode, Theme } from "emoji-picker-rea
 import { User } from "lucide-react";
 import { Label } from "./ui/label";
 import { FaFileUpload, FaUpload } from "react-icons/fa";
-
-
+import im from "@/public/cloud-computing_892311.png";
+import Image from "next/image";
 const convo: Conversation = {
     "conversation": [
         {
@@ -348,7 +348,8 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
             {isFile &&
                 <div className="w-full h-3/4 border border-dashed rounded-md">
                     <Label htmlFor="fileUpload" className="h-full w-full gap-2 flex flex-col items-center justify-center">
-                        <FaUpload className="w-44 h-44 mb-2" />
+
+                        <Image src={im} alt={"Upload Image"} width={150} />
                         <span className="text-xl ">Upload A File</span>
                     </Label>
                     <input id="fileUpload" type="file" className="w-0 h-0 hover:cursor-pointer" onChange={onFileChange} />
