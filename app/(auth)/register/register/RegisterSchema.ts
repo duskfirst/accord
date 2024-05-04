@@ -11,7 +11,7 @@ export const RegisterSchema = z.object({
         .trim()
         .min(3, "Username must have at least 3 characters.")
         .max(30, "Username is too long.")
-        .refine(username => /[\w-]{3,30}/.test(username), "Username can only have a-z, A-Z, - or _")
+        .refine(username => /^[\w-]{3,30}$/.test(username), "Username can only have a-z, A-Z, - or _")
         .refine(username => !["profile", "register", "settings", "login"].includes(username), "Sorry you cannot use this as your username."),
     password: z
         .string()

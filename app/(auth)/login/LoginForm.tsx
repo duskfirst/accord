@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { IconInput, PasswordInput } from "@/components/ui/input";
 
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import { Mail } from "lucide-react";
@@ -24,8 +24,6 @@ import { cn } from "@/lib/utils";
 import { login } from "./login";
 
 import Link from "next/link";
-import { AuthContext } from "@/context/AuthContext";
-import { confirmEmail } from "./confirm-email";
 
 
 const LoginForm = () => {
@@ -50,19 +48,14 @@ const LoginForm = () => {
     const emailState = getFieldState("email");
     const passwordState = getFieldState("password");
 
-    const [email, setEmail] = useContext(AuthContext)!;
-    
     const onSubmit = async (values: LoginSchema) => {
         let error = await login(values);
         if (error) {
             if (error === "Email not confirmed") {
-                setEmail(values.email);
-                error = await confirmEmail(values.email);
-                if (!error) {
-                    window.location.href = "/register";
-                }
+                setError("root", { message: "Email not confirmed. Register again." });
+            } else {
+                setError("root", { message: error });
             }
-            setError("root", { message: error });
         }
     };
     
@@ -116,7 +109,7 @@ const LoginForm = () => {
                         Login
                     </FormSubmitButton>
                     <Link href="/register" className="px-4 hover:text-slate-200 hover:underline">
-                        register
+                        Register
                     </Link>
                 </div>
             </form>

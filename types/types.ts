@@ -10,3 +10,12 @@ export type Message = {
 export type Conversation = {
     "conversation" : Message[],
 };
+
+export interface Profile {
+    avatar_url: string | null;
+    display_name: string | null;
+    email?: string
+    id: string | null;
+    username: string | null;
+    website: string | null;
+};
