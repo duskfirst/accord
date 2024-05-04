@@ -16,10 +16,10 @@ const Page = ({ params }: { params: { username: string } }) => {
         <>
             <ResizablePanelGroup
                 direction="horizontal"
-                className="h-full w-full border hidden"
+                className="h-full w-full hidden"
             >
                 <div className="h-full w-full flex md:hidden">
-                    <div className="border flex items-center w-full md:w-2/3 justify-center flex-grow h-full" >
+                    <div className="flex items-center w-full md:w-2/3 justify-center flex-grow h-full" >
                         <Chats receiver={receiver} setReceiver={setReceiver} username={params.username} />
                     </div>
                 </ div >
