@@ -2,7 +2,7 @@ import { ChevronRight } from "lucide-react";
 import FriendList from "./FriendList";
 import Sidenav from "./Sidenav";
 import { Button } from "./ui/button";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
 interface Props {
     className?: string,

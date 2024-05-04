@@ -4,65 +4,12 @@ import MessageInput from "./MessageInput";
 import SidePop from "./SidePop";
 import { useEffect, useRef, useState } from "react";
 import EmojiPicker, { EmojiStyle, SuggestionMode, Theme } from "emoji-picker-react";
-import { Import, User } from "lucide-react";
-import { Label } from "./ui/label";
-
+import { User } from "lucide-react";
+import { Label } from "./ui/label";;
+import im from "@/public/cloud-computing_892311.png";
+import Image from "next/image";
 const convo: Conversation = {
     "conversation": [
-        {
-            "id": "1",
-            "sender": "Alice",
-            "receiver": "Bob",
-            "text": "Hey Bob, how's it going?"
-        },
-        {
-            "id": "2",
-            "sender": "Bob",
-            "receiver": "Alice",
-            "text": "Hi Alice, I'm doing well, thanks! How about you?"
-        },
-        {
-            "id": "3",
-            "sender": "Alice",
-            "receiver": "Bob",
-            "text": "I'm good too, thanks for asking."
-        },
-        {
-            "id": "4",
-            "sender": "Bob",
-            "receiver": "Alice",
-            "text": "Did you have a chance to look at the new project proposal?"
-        },
-        {
-            "id": "5",
-            "sender": "Alice",
-            "receiver": "Bob",
-            "text": "Yes, I did. It looks promising, but I think we need to revise the budget estimates."
-        },
-        {
-            "id": "6",
-            "sender": "Bob",
-            "receiver": "Alice",
-            "text": "That's a good point. Let's schedule a meeting to discuss it further."
-        },
-        {
-            "id": "7",
-            "sender": "Alice",
-            "receiver": "Bob",
-            "text": "Sure, when works for you?"
-        },
-        {
-            "id": "8",
-            "sender": "Bob",
-            "receiver": "Alice",
-            "text": "How about Thursday afternoon?"
-        },
-        {
-            "id": "9",
-            "sender": "Alice",
-            "receiver": "Bob",
-            "text": "Sounds good, let's do that."
-        },
         {
             "sender": "Alice",
             "receiver": "Ethan",
@@ -230,7 +177,6 @@ const convo: Conversation = {
 };
 
 
-
 const Chats = ({ username, setReceiver, receiver }: { receiver: string, username: string, setReceiver: (data: string) => void }) => {
 
     const [emojiActive, setEmojiActive] = useState(false);
@@ -238,19 +184,20 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const [emoji, setEmoji] = useState("");
     const [messages, setMessages] = useState<Message[]>(convo.conversation);
-    const [isFile, setIsFile] = useState(false);
+    const [isFileActive, setFileActive] = useState(false);
     const [inputVal, setInputVal] = useState("");
     const [fileVal, setFile] = useState<File | undefined>(undefined);
 
 
     const onSend = (msg: string, name: string, file?: File) => {
         let data: Message;
-        if (!isFile) {
+        if (!isFileActive) {
 
             data = {
                 sender: username,
                 receiver: name,
                 text: msg,
+                time: new Date(),
                 id: `${messages.length + 1}`
             };
         }
@@ -258,6 +205,7 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
             data = {
                 sender: username,
                 receiver: name,
+                time: new Date(),
                 text: msg,
                 id: `${messages.length + 1}`,
                 file: file,
@@ -267,16 +215,31 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
         setMessages([...messages, data]);
     };
 
+    const onDelete = (msg: Message) => {
+        const newMessages = messages.filter((m) => m.id !== msg.id);
+        console.log("deleted");
+        setMessages(newMessages);
+    };
+
+    const onEdit = (msg: Message, newText: string) => {
+        const newMessages = messages.filter((m) => m.id !== msg.id);
+        console.log(newMessages);
+        setMessages([...newMessages, { ...msg, text: newText, time: new Date() }]);
+        console.log("Edited");
+    };
+
+
     const onClick = () => {
-        console.log(fileVal);
-
-        if (fileVal === undefined) {
-
+        if (fileVal) {
+            onSend(inputVal, receiver, fileVal);
         }
-
-        onSend(inputVal, "Bob");
+        else {
+            onSend(inputVal, receiver);
+        }
         setInputVal("");
         setFile(undefined);
+        setFileActive(false);
+        setEmojiActive(false);
     };
 
     const onEnterClick = (e: KeyboardEvent) => {
@@ -289,7 +252,7 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
 
     useEffect(() => {
         listRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages, emojiActive, isFile]);
+    }, [messages, emojiActive, isFileActive]);
 
     useEffect(() => {
         setInputVal(inputVal => inputVal + emoji);
@@ -305,9 +268,8 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
     };
 
     return (
-        <div className="h-full w-full flex flex-col p-1">
-            <div className="border m-1 h-12 shrink-0 p-1  grid grid-cols-3 md:flex items-center content-start">
-
+        <div className="h-full w-full flex flex-col bg-gradient">
+            <div className="bg-accent mb-1 h-12 shrink-0 p-1  grid grid-cols-3 md:flex items-center content-start">
                 <SidePop receiver={receiver} setReceiver={setReceiver} className=" md:hidden " />
                 <span className="w-full text-center content-center">
                     {username}
@@ -315,28 +277,28 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
                 <div className="mr-8">
                     <User />
                 </div>
-
             </div>
-            <div className="border overflow-auto m-1 h-full text-center" >
+            <div className="overflow-auto m-0 h-full text-center" >
                 <div className="">
-                    <ListItem conversation={messages} user={username} listRef={listRef} receiver={receiver} />
+                    <ListItem conversation={messages} onDelete={onDelete} onEdit={onEdit} user={username} listRef={listRef} receiver={receiver} />
                 </div>
             </div>
             {emojiActive &&
                 <EmojiPicker width={"100%"}
                     lazyLoadEmojis={true}
-                    emojiStyle={EmojiStyle.NATIVE}
+                    emojiStyle={EmojiStyle.TWITTER}
                     suggestedEmojisMode={SuggestionMode.FREQUENT}
                     onEmojiClick={(e) => { setEmoji(e.emoji); }}
-                    height={"100"}
-                    className="transition "
+                    height={"100%"}
                     theme={Theme.DARK} />
+
             }
-            {isFile &&
+            {isFileActive &&
                 <div className="w-full h-3/4 border border-dashed rounded-md">
-                    <Label htmlFor="fileUpload" className="h-full w-full flex flex-col items-center justify-center">
+                    <Label htmlFor="fileUpload" className="h-full w-full gap-2 flex flex-col items-center justify-center">
+
+                        <Image src={im} alt={"Upload Image"} width={150} />
                         <span className="text-xl ">Upload A File</span>
-                        <Import className="relative size-40" />
                     </Label>
                     <input id="fileUpload" type="file" className="w-0 h-0 hover:cursor-pointer" onChange={onFileChange} />
                 </div>
@@ -344,8 +306,8 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
             <div className="border m-1 flex flex-col text-center h-fit" >
                 <MessageInput
                     textAreaRef={textAreaRef}
-                    setFile={setIsFile}
-                    isFile={isFile}
+                    setFileActive={setFileActive}
+                    isFileActive={isFileActive}
                     inputVal={inputVal}
                     setInputVal={setInputVal}
                     emojiActive={emojiActive}

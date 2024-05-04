@@ -10,27 +10,28 @@ interface Props {
     setEmojiActive: (emojiActive: boolean) => void,
     inputVal: string,
     setInputVal: (data: string) => void;
-    isFile: boolean,
+    isFileActive: boolean,
     textAreaRef: LegacyRef<HTMLTextAreaElement> | undefined
-    setFile: (fileActive: boolean) => void,
+    setFileActive: (fileActive: boolean) => void,
 }
 
-const MessageInput = ({ onClick, onEnterClick, inputVal, setInputVal, emojiActive, setEmojiActive, isFile, textAreaRef, setFile }: Props) => {
+const MessageInput = ({ onClick, onEnterClick, inputVal, setInputVal, emojiActive, setEmojiActive, isFileActive, textAreaRef, setFileActive }: Props) => {
 
 
     const onEmojiOpen = () => {
-        setEmojiActive((emojiActive && !true || !emojiActive && true));
+        setEmojiActive(!emojiActive);
+        setFileActive(false);
     };
 
     const onFileOpen = () => {
-        setFile((isFile && !true || !isFile && true));
+        setFileActive(!isFileActive);
     };
 
     return (
         <>
             <div className="h-full w-full p-2 pl-2 pr-2 flex items-center justify-center content-center">
 
-                <Button variant={"ghost"} onClick={onFileOpen} className="rounded-sm w-fit p-2">{isFile ? <X /> : <File />}</Button>
+                <Button variant={"ghost"} onClick={onFileOpen} className="rounded-sm w-fit p-2">{isFileActive ? <X /> : <File />}</Button>
                 <Button variant={"ghost"} onClick={onEmojiOpen} className="rounded-full w-fit p-2">{emojiActive ? <X /> : <Smile />}</Button>
 
                 <textarea
