@@ -31,7 +31,7 @@ export const ProfileProvider = ({
             const { data: { user }, error } = await supabase.auth.getUser();
             if (user) {
                 const { data, error } = await supabase
-                    .from("profiles")
+                    .from("profile")
                     .select("*")
                     .eq("id", user.id);
                 if (!error && data.length) {

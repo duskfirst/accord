@@ -9,6 +9,6 @@ export const checkIfValueTaken = async(field: string, value: string) => {
     const supabase = createServiceClient();
     const {
         data, error
-    } = await supabase.from("profiles").select(field).eq(field, value).not("email_confirmed_at", "is", null);
+    } = await supabase.from("profile").select(field).eq(field, value).not("email_confirmed_at", "is", null);
     return { exists: data ? !!data.length : undefined, error };
 };
