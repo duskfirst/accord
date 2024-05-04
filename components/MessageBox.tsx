@@ -1,5 +1,5 @@
 "use client";
-import { Message } from "@/types/types";
+import { _Message } from "@/types/types";
 import Image from "next/image";
 import FileDisplay from "./FileDisplay";
 import { useRef, useState } from "react";
@@ -7,10 +7,10 @@ import { Pencil, Save, Trash2 } from "lucide-react";
 import { Input } from "./ui/input";
 
 interface Props {
-    msg: Message,
+    msg: _Message,
     user: string,
-    onDelete: (msg: Message) => void;
-    onEdit: (msg: Message, newText: string) => void;
+    onDelete: (msg: _Message) => void;
+    onEdit: (msg: _Message, newText: string) => void;
 }
 
 const EditableCheck = (msgDate: Date) => {

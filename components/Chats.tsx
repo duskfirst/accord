@@ -1,5 +1,5 @@
 import ListItem from "@/components/ListItems";
-import { Conversation, Message } from "@/types/types";
+import { _Conversation, _Message } from "@/types/types";
 import MessageInput from "./MessageInput";
 import SidePop from "./SidePop";
 import { useEffect, useRef, useState } from "react";
@@ -8,7 +8,7 @@ import { User } from "lucide-react";
 import { Label } from "./ui/label";;
 import im from "@/public/cloud-computing_892311.png";
 import Image from "next/image";
-const convo: Conversation = {
+const convo: _Conversation = {
     "conversation": [
         {
             "sender": "Alice",
@@ -183,14 +183,14 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
     const listRef = useRef<HTMLLIElement>(null);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const [emoji, setEmoji] = useState("");
-    const [messages, setMessages] = useState<Message[]>(convo.conversation);
+    const [messages, setMessages] = useState<_Message[]>(convo.conversation);
     const [isFileActive, setFileActive] = useState(false);
     const [inputVal, setInputVal] = useState("");
     const [fileVal, setFile] = useState<File | undefined>(undefined);
 
 
     const onSend = (msg: string, name: string, file?: File) => {
-        let data: Message;
+        let data: _Message;
         if (!isFileActive) {
 
             data = {
@@ -215,13 +215,13 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
         setMessages([...messages, data]);
     };
 
-    const onDelete = (msg: Message) => {
+    const onDelete = (msg: _Message) => {
         const newMessages = messages.filter((m) => m.id !== msg.id);
         console.log("deleted");
         setMessages(newMessages);
     };
 
-    const onEdit = (msg: Message, newText: string) => {
+    const onEdit = (msg: _Message, newText: string) => {
         const newMessages = messages.filter((m) => m.id !== msg.id);
         console.log(newMessages);
         setMessages([...newMessages, { ...msg, text: newText, time: new Date() }]);
