@@ -1,30 +1,41 @@
 "use client";
+import Chats from "@/components/Chats";
+import FriendList from "@/components/FriendList";
+import Sidenav from "@/components/Sidenav";
+import {
+    ResizableHandle,
+    ResizablePanel,
+    ResizablePanelGroup,
+} from "@/components/ui/resizable";
+import { useState } from "react";
 
-import { useProfile } from "@/components/providers/profile-provider";
-
-
-const UserPage = () => {
-    
-    const [profile] = useProfile()!;
-    
+const Page = () => {
+    const [receiver, setReceiver] = useState("Ethan");
+    const params = {
+        username: "Bob"
+    }; // temporary fix
     return (
-        <div className="flex items-center justify-center flex-col h-full gap-10">
-            <span className="text-xl uppercase font-bold text-cyan-300">{ profile.username }</span>
-            <div className="grid grid-cols-2 gap-2">
-                <span>Email</span>
-                <span>{ profile.email }</span>
-                <span>Display Name</span>
-                <span>{ profile.display_name || "no display name"}</span>
-                <span>Id</span>
-                <span>{ profile.id }</span>
-                <span>website</span>
-                <span>{ profile.website || "no website" }</span>
-            </div>
-            <span className="text-xs">
-                Just testing profile provider
-            </span>
-        </div>
+        <>
+            <ResizablePanelGroup
+                direction="horizontal"
+                className="h-full w-full hidden"
+            >
+                <div className="h-full w-full flex md:hidden">
+                    <div className="flex items-center w-full md:w-2/3 justify-center flex-grow h-full" >
+                        <Chats receiver={receiver} setReceiver={setReceiver} username={params.username} />
+                    </div>
+                </ div >
+                <ResizablePanel defaultSize={25} minSize={15} className="hidden md:flex">
+                    <Sidenav />
+                    <FriendList receiver={receiver} setReceiver={setReceiver} className="border flex items-center justify-center w-11/12 h-full" />
+                </ResizablePanel>
+                <ResizableHandle />
+                <ResizablePanel defaultSize={75} minSize={40} className=" h-full justify-center hidden md:flex items-center">
+                    <Chats receiver={receiver} setReceiver={setReceiver} username={params.username} />
+
+                </ResizablePanel>
+            </ResizablePanelGroup>
+        </>
     );
 };
-
-export default UserPage;
+export default Page;
