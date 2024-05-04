@@ -9,6 +9,7 @@ import { Label } from "./ui/label";
 import { FaFileUpload, FaUpload } from "react-icons/fa";
 import im from "@/public/cloud-computing_892311.png";
 import Image from "next/image";
+import { Onest } from "next/font/google";
 const convo: Conversation = {
     "conversation": [
         {
@@ -248,14 +249,14 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const [emoji, setEmoji] = useState("");
     const [messages, setMessages] = useState<Message[]>(convo.conversation);
-    const [isFile, setIsFile] = useState(false);
+    const [isFileActive, setFileActive] = useState(false);
     const [inputVal, setInputVal] = useState("");
     const [fileVal, setFile] = useState<File | undefined>(undefined);
 
 
     const onSend = (msg: string, name: string, file?: File) => {
         let data: Message;
-        if (!isFile) {
+        if (!isFileActive) {
 
             data = {
                 sender: username,
@@ -286,7 +287,7 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
         }
         setInputVal("");
         setFile(undefined);
-        setIsFile(false);
+        setFileActive(false);
         setEmojiActive(false);
     };
 
@@ -300,7 +301,7 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
 
     useEffect(() => {
         listRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages, emojiActive, isFile]);
+    }, [messages, emojiActive, isFileActive]);
 
     useEffect(() => {
         setInputVal(inputVal => inputVal + emoji);
@@ -315,12 +316,9 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
         }
     };
 
-
-
     return (
-        <div className="h-full w-full flex flex-col p-1 bg-gradient">
-            <div className="border m-1 h-12 shrink-0 p-1  grid grid-cols-3 md:flex items-center content-start">
-
+        <div className="h-full w-full flex flex-col bg-gradient">
+            <div className="bg-accent mb-1 h-12 shrink-0 p-1  grid grid-cols-3 md:flex items-center content-start">
                 <SidePop receiver={receiver} setReceiver={setReceiver} className=" md:hidden " />
                 <span className="w-full text-center content-center">
                     {username}
@@ -328,9 +326,8 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
                 <div className="mr-8">
                     <User />
                 </div>
-
             </div>
-            <div className="border overflow-auto m-1 h-full text-center" >
+            <div className="overflow-auto m-0 h-full text-center" >
                 <div className="">
                     <ListItem conversation={messages} user={username} listRef={listRef} receiver={receiver} />
                 </div>
@@ -338,14 +335,14 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
             {emojiActive &&
                 <EmojiPicker width={"100%"}
                     lazyLoadEmojis={true}
-                    emojiStyle={EmojiStyle.NATIVE}
+                    emojiStyle={EmojiStyle.TWITTER}
                     suggestedEmojisMode={SuggestionMode.FREQUENT}
                     onEmojiClick={(e) => { setEmoji(e.emoji); }}
-                    height={"100"}
-                    className="transition "
+                    height={"100%"}
                     theme={Theme.DARK} />
+
             }
-            {isFile &&
+            {isFileActive &&
                 <div className="w-full h-3/4 border border-dashed rounded-md">
                     <Label htmlFor="fileUpload" className="h-full w-full gap-2 flex flex-col items-center justify-center">
 
@@ -358,8 +355,8 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
             <div className="border m-1 flex flex-col text-center h-fit" >
                 <MessageInput
                     textAreaRef={textAreaRef}
-                    setFile={setIsFile}
-                    isFile={isFile}
+                    setFileActive={setFileActive}
+                    isFileActive={isFileActive}
                     inputVal={inputVal}
                     setInputVal={setInputVal}
                     emojiActive={emojiActive}

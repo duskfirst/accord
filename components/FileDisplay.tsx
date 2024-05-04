@@ -10,6 +10,10 @@ interface Props {
     file: File | undefined,
 }
 
+const fileSizeConvert = (size: number) => {
+    var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
+    return +((size / Math.pow(1024, i)).toFixed(2)) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+};
 const FileDisplay = ({ file }: Props) => {
     const [objectUrl, setObjectUrl] = useState("https://via.placeholder.com/150");
 
@@ -19,15 +23,14 @@ const FileDisplay = ({ file }: Props) => {
             setObjectUrl(url);
         }
     }, []);
-
+    if (!file)
+        return null;
     switch (file?.type.split("/")[0]) {
         case "image":
         case "gif":
             return (
 
                 < div className="w-max p-2 gap-2 flex flex-col rounded-md items-start bg-accent" >
-                    <span className="pb-1 flex justify-between gap-4">{file?.name}
-                    </span>
                     {
                         <Dialog >
                             <DialogTrigger>
@@ -45,7 +48,6 @@ const FileDisplay = ({ file }: Props) => {
             return (
 
                 < div className="w-max p-2 flex flex-col rounded-md items-start bg-accent" >
-                    <span className="pb-1">{file?.name}</span>
                     <video src={objectUrl} controls >
                     </video>
                 </div >
@@ -64,10 +66,18 @@ const FileDisplay = ({ file }: Props) => {
         default:
             return (
 
-                <div className="w-max p-4 gap-4 flex rounded-md items-start bg-accent">
-                    <span className="pb-1">{file?.name}</span>
-                    <Link href={objectUrl} download={file?.name} >
-                        <FileDown />
+                <div className="w-max p-4 gap-4 flex rounded-md justify-center items-center bg-accent">
+                    <div className="pb-1 grid gap-2">
+                        <span className="font-semibold text-md">
+                            {file?.name}
+                        </span>
+                        <span className="text-xs">
+                            {fileSizeConvert(file?.size)}
+                        </span>
+
+                    </div>
+                    <Link href={objectUrl} target="_blank" download={file?.name}  >
+                        <Download />
                     </Link>
                 </div >
             );

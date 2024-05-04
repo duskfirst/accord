@@ -5,6 +5,7 @@ import FileDisplay from "./FileDisplay";
 import { useState } from "react";
 import { Pencil, Save, Trash2 } from "lucide-react";
 import { Input } from "./ui/input";
+
 interface Props {
     msg: Message,
     user: string,

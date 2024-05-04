@@ -39,7 +39,14 @@ const FriendList = ({ className, setReceiver, receiver }: Props) => {
                             <span className="" key={user.id + "friendDatauser"}>
                                 {user.username}
                             </span>
-                            <div className="rounded-full flex justify-center items-center p-3 h-4 w-4 text-sm text-foreground absolute right-3 mr-2 bg-primary">{user.unseen_messages}</div>
+                            {
+                                user.unseen_messages != 0 &&
+                                <div
+                                    className="rounded-full flex justify-center items-center p-3 h-4 w-4 text-sm text-foreground absolute right-3 mr-2 bg-primary"
+                                >
+                                    {user.unseen_messages}
+                                </div>
+                            }
                         </div>
                         <Separator />
                     </li>
