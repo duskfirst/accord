@@ -130,6 +130,32 @@ create policy "Anyone can upload an avatar." on storage.objects
 
 create policy "Anyone can update their own avatar." on storage.objects
     for update using ((select auth.uid()) = owner) with check (bucket_id = 'avatars');
+
+-- Conversation Table
+
+create table conversation (
+    id uuid not null primary key,
+    one uuid not null references profiles on delete cascade,
+    another uuid not null references profiles on delete cascade,
+    created_at timestamp,
+    unique(one, another)
+);
+
+-- Message Table
+
+create table message (
+    id uuid not null primary key,
+    conversation uuid not null references conversation on delete cascade,
+    content text,
+    file_url text,
+    sent_at timestamp,
+    sent_by uuid not null references profiles on delete cascade,
+    edited bool default false,
+    deleted bool default false
+);
+
+-- TO DO: Enable Row-Level Security for Conversation and Message tables.
+
 ```
 
 ### Run Dev Server
