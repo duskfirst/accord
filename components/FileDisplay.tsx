@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Download, FileDown } from "lucide-react";
+import { Download } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import ReactAudioPlayer from "react-audio-player";
@@ -12,17 +12,17 @@ interface Props {
 
 const fileSizeConvert = (size: number) => {
     var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
-    return +((size / Math.pow(1024, i)).toFixed(2)) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+    return +((size / Math.pow(1024, i)).toFixed(2)) * 1 + " " + ["B", "kB", "MB", "GB", "TB"][i];
 };
 const FileDisplay = ({ file }: Props) => {
     const [objectUrl, setObjectUrl] = useState("https://via.placeholder.com/150");
-
     useEffect(() => {
         if (file) {
             const url = URL.createObjectURL(file);
             setObjectUrl(url);
         }
-    }, []);
+    }, [file]);
+
     if (!file)
         return null;
     switch (file?.type.split("/")[0]) {
@@ -34,10 +34,10 @@ const FileDisplay = ({ file }: Props) => {
                     {
                         <Dialog >
                             <DialogTrigger>
-                                <Image src={objectUrl} alt={"Image"} width={400} height={400} objectFit="contain" className="rounded-md" />
+                                <Image src={objectUrl} alt={"Image"} width={400} height={400} className="rounded-md" />
                             </DialogTrigger>
                             <DialogContent className="min-w-[80vw] min-h-[90vh] items-center justify-center">
-                                <Image src={objectUrl} alt={"Image"} objectFit="contain" fill={true} />
+                                <Image src={objectUrl} alt={"Image"} fill style={{ objectFit: "contain" }} />
                             </DialogContent>
                         </ Dialog >
                     }

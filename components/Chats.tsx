@@ -11,60 +11,6 @@ import Image from "next/image";
 const convo: Conversation = {
     "conversation": [
         {
-            "id": "1",
-            "sender": "Alice",
-            "receiver": "Bob",
-            "text": "Hey Bob, how's it going?"
-        },
-        {
-            "id": "2",
-            "sender": "Bob",
-            "receiver": "Alice",
-            "text": "Hi Alice, I'm doing well, thanks! How about you?"
-        },
-        {
-            "id": "3",
-            "sender": "Alice",
-            "receiver": "Bob",
-            "text": "I'm good too, thanks for asking."
-        },
-        {
-            "id": "4",
-            "sender": "Bob",
-            "receiver": "Alice",
-            "text": "Did you have a chance to look at the new project proposal?"
-        },
-        {
-            "id": "5",
-            "sender": "Alice",
-            "receiver": "Bob",
-            "text": "Yes, I did. It looks promising, but I think we need to revise the budget estimates."
-        },
-        {
-            "id": "6",
-            "sender": "Bob",
-            "receiver": "Alice",
-            "text": "That's a good point. Let's schedule a meeting to discuss it further."
-        },
-        {
-            "id": "7",
-            "sender": "Alice",
-            "receiver": "Bob",
-            "text": "Sure, when works for you?"
-        },
-        {
-            "id": "8",
-            "sender": "Bob",
-            "receiver": "Alice",
-            "text": "How about Thursday afternoon?"
-        },
-        {
-            "id": "9",
-            "sender": "Alice",
-            "receiver": "Bob",
-            "text": "Sounds good, let's do that."
-        },
-        {
             "sender": "Alice",
             "receiver": "Ethan",
             "time": new Date(2024, 3, 22, 10, 18), // April 22, 2024, 10:18 AM
@@ -251,6 +197,7 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
                 sender: username,
                 receiver: name,
                 text: msg,
+                time: new Date(),
                 id: `${messages.length + 1}`
             };
         }
@@ -258,6 +205,7 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
             data = {
                 sender: username,
                 receiver: name,
+                time: new Date(),
                 text: msg,
                 id: `${messages.length + 1}`,
                 file: file,
@@ -269,15 +217,15 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
 
     const onDelete = (msg: Message) => {
         const newMessages = messages.filter((m) => m.id !== msg.id);
-        console.log('deleted');
+        console.log("deleted");
         setMessages(newMessages);
     };
 
     const onEdit = (msg: Message, newText: string) => {
         const newMessages = messages.filter((m) => m.id !== msg.id);
         console.log(newMessages);
-        setMessages([...newMessages, { ...msg, text: newText }]);
-        console.log('Edited');
+        setMessages([...newMessages, { ...msg, text: newText, time: new Date() }]);
+        console.log("Edited");
     };
 
 
