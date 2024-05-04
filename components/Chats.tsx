@@ -5,11 +5,9 @@ import SidePop from "./SidePop";
 import { useEffect, useRef, useState } from "react";
 import EmojiPicker, { EmojiStyle, SuggestionMode, Theme } from "emoji-picker-react";
 import { User } from "lucide-react";
-import { Label } from "./ui/label";
-import { FaFileUpload, FaUpload } from "react-icons/fa";
+import { Label } from "./ui/label";;
 import im from "@/public/cloud-computing_892311.png";
 import Image from "next/image";
-import { Onest } from "next/font/google";
 const convo: Conversation = {
     "conversation": [
         {
@@ -232,15 +230,6 @@ const convo: Conversation = {
     ]
 };
 
-for (let i = 0; i < 100; i++) {
-    convo.conversation.push({
-        "sender": "Ethan",
-        "receiver": "Alice",
-        "time": new Date(),
-        "text": ("asdsd"),
-        id: (i + 100).toString(),
-    });
-}
 
 const Chats = ({ username, setReceiver, receiver }: { receiver: string, username: string, setReceiver: (data: string) => void }) => {
 
@@ -277,6 +266,20 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
 
         setMessages([...messages, data]);
     };
+
+    const onDelete = (msg: Message) => {
+        const newMessages = messages.filter((m) => m.id !== msg.id);
+        console.log('deleted');
+        setMessages(newMessages);
+    };
+
+    const onEdit = (msg: Message, newText: string) => {
+        const newMessages = messages.filter((m) => m.id !== msg.id);
+        console.log(newMessages);
+        setMessages([...newMessages, { ...msg, text: newText }]);
+        console.log('Edited');
+    };
+
 
     const onClick = () => {
         if (fileVal) {
@@ -329,7 +332,7 @@ const Chats = ({ username, setReceiver, receiver }: { receiver: string, username
             </div>
             <div className="overflow-auto m-0 h-full text-center" >
                 <div className="">
-                    <ListItem conversation={messages} user={username} listRef={listRef} receiver={receiver} />
+                    <ListItem conversation={messages} onDelete={onDelete} onEdit={onEdit} user={username} listRef={listRef} receiver={receiver} />
                 </div>
             </div>
             {emojiActive &&

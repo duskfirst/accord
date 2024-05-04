@@ -2,26 +2,32 @@
 import { Message } from "@/types/types";
 import Image from "next/image";
 import FileDisplay from "./FileDisplay";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Pencil, Save, Trash2 } from "lucide-react";
 import { Input } from "./ui/input";
 
 interface Props {
     msg: Message,
     user: string,
+    onDelete: (msg: Message) => void;
+    onEdit: (msg: Message, newText: string) => void;
 }
-const MessageBox = ({ msg, user }: Props) => {
+
+const MessageBox = ({ msg, user, onDelete, onEdit }: Props) => {
     const [isEdit, setEdit] = useState(false);
+    const inputRef = useRef<HTMLInputElement>(null);
     const onSave = () => {
         setEdit(false);
-        console.log("save");
+        if (inputRef.current?.value && (msg.text !== inputRef?.current?.value))
+            onEdit(msg, inputRef?.current?.value);
     };
-    const onEdit = () => {
+    const onEdited = () => {
         setEdit(true);
         console.log("Edit");
     };
-    const onDelete = () => {
-        console.log("Delete");
+
+    const onDeleted = () => {
+        onDelete(msg);
     };
 
     const date = new Date();
@@ -39,8 +45,8 @@ const MessageBox = ({ msg, user }: Props) => {
                         {date.toString().substring(0, date.toString().length - 34)}
                     </span>
                     <div className="self-end flex-grow flex justify-end">
-                        {!msg.file && <button className="h-fit hover:bg-primary p-1 rounded-md w-fit" onClick={!isEdit ? onEdit : onSave}>{!isEdit ? <Pencil className="h-4 md:h-5" /> : <Save className="h-4 md:h-5" />}</button>}
-                        <button className="h-fit hover:bg-destructive p-1 rounded-md w-fit" onClick={onDelete}><Trash2 className="h-4 md:h-5" /></button>
+                        {!msg.file && <button className="h-fit hover:bg-primary p-1 rounded-md w-fit" onClick={!isEdit ? onEdited : onSave}>{!isEdit ? <Pencil className="h-4 md:h-5" /> : <Save className="h-4 md:h-5" />}</button>}
+                        <button className="h-fit hover:bg-destructive p-1 rounded-md w-fit" onClick={onDeleted}><Trash2 className="h-4 md:h-5" /></button>
                     </div>
                 </div>
                 {!isEdit ?
@@ -49,7 +55,7 @@ const MessageBox = ({ msg, user }: Props) => {
                     </div>
                     :
                     <div>
-                        <Input type="text" className="bg-background" defaultValue={msg.text}></Input>
+                        <Input type="text" className="bg-background" ref={inputRef} defaultValue={msg.text}></Input>
                     </div>
                 }
             </div >

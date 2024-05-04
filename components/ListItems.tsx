@@ -8,8 +8,10 @@ interface Props {
     user: string,
     listRef: LegacyRef<HTMLLIElement> | undefined,
     receiver?: string,
+    onDelete: (msg: Message) => void;
+    onEdit: (msg: Message, newText: string) => void;
 }
-const ListItem = ({ conversation, user, listRef, receiver }: Props) => {
+const ListItem = ({ conversation, user, listRef, receiver, onDelete, onEdit }: Props) => {
     const filteredConvo = conversation?.filter((convo) => (convo.receiver === receiver && convo.sender === user) || (convo.sender === receiver && convo.receiver === user));
 
     return (
@@ -26,6 +28,8 @@ const ListItem = ({ conversation, user, listRef, receiver }: Props) => {
                     }
                 >
                     <MessageBox
+                        onDelete={onDelete}
+                        onEdit={onEdit}
                         user={user}
                         msg={convo}
                     />
