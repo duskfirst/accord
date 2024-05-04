@@ -1,6 +1,6 @@
 
 import { ChevronRight, CircleX, X } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "./button";
 
 interface Props {
     sideOpen: boolean,

@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emoji-mart/data": "^1.2.1",
+    "@emoji-mart/react": "^1.1.1",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
@@ -27,6 +29,7 @@
     "@typescript-eslint/parser": "^7.7.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "emoji-mart": "^5.6.0",
     "emoji-picker-react": "^4.9.2",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.3",

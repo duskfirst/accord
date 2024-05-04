@@ -1,11 +1,11 @@
-import ListItem from "@/components/ListItems";
+import ListItem from "@/components/chats/ListItems";
 import { Conversation, Message } from "@/types/types";
 import MessageInput from "./MessageInput";
-import SidePop from "./SidePop";
+import SidePop from "../SidePop";
 import { useEffect, useRef, useState } from "react";
 import EmojiPicker, { EmojiStyle, SuggestionMode, Theme } from "emoji-picker-react";
 import { User } from "lucide-react";
-import { Label } from "./ui/label";;
+import { Label } from "../ui/label";;
 import im from "@/public/cloud-computing_892311.png";
 import Image from "next/image";
 const convo: Conversation = {

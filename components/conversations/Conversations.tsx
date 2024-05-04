@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { Separator } from "./ui/separator";
+import { Separator } from "../ui/separator";
+import { cn } from "@/lib/utils";
 
 interface Props {
     className?: string,
@@ -20,15 +21,16 @@ const friendData = [
     { "id": "10", "username": "Mason", "unseen_messages": 6, "image_url": "https://via.placeholder.com/150" }
 ];
 
-const FriendList = ({ className, setReceiver, receiver }: Props) => {
+const Conversations = ({ className, setReceiver, receiver }: Props) => {
 
 
     return (
-        <div className={className + "w-full"} >
-
+        <div className={cn(className, "w-full flex flex-col")} >
+            <span className="flex text-xl font-bold border-b-2 w-full items-center justify-center h-12">
+                Conversations
+            </span>
             <ul className="p-2 grid grid-cols-1 gap-1 h-full w-full overflow-auto">
                 {friendData.map((user: any) => (
-
                     <li
                         key={user.id + "FriendList"}
                         className={"flex flex-col text-left hover:bg-muted pl-4 rounded-md self-end m-2" + ((receiver === user.receiver) ? "bg-muted" : "")}
@@ -55,4 +57,4 @@ const FriendList = ({ className, setReceiver, receiver }: Props) => {
         </div >
     );
 };
-export default FriendList;
+export default Conversations;

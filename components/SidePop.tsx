@@ -1,6 +1,6 @@
 import { ChevronRight } from "lucide-react";
-import FriendList from "./FriendList";
-import Sidenav from "./Sidenav";
+import FriendList from "./conversations/Conversations";
+import Sidenav from "./sidenav/Sidenav";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 

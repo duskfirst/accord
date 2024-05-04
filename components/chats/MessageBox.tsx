@@ -4,7 +4,7 @@ import Image from "next/image";
 import FileDisplay from "./FileDisplay";
 import { useRef, useState } from "react";
 import { Pencil, Save, Trash2 } from "lucide-react";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 
 interface Props {
     msg: Message,

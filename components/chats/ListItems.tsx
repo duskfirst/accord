@@ -1,7 +1,7 @@
 import { Message } from "@/types/types";
 import MessageBox from "./MessageBox";
 import { LegacyRef } from "react";
-import { Separator } from "./ui/separator";
+import { Separator } from "../ui/separator";
 
 interface Props {
     conversation: Message[] | undefined,
