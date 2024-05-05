@@ -1,9 +1,6 @@
 import Home from "@/components/home/Home";
+import Conversations from "@/components/user/conversations/Conversations";
 import Sidenav from "@/components/user/navigation/Sidenav";
-import { 
-    ResizablePanel,
-    ResizablePanelGroup,
-} from "@/components/ui/resizable";
 
 import { Profile } from "@/types/types";
 import { createServerClient } from "@/utils/supabase/server";
@@ -28,17 +25,13 @@ const UserLayout = async ({ children } : {
         .single() as PostgrestSingleResponse<Profile>;
 
     return (
-        <ResizablePanelGroup
-            direction="horizontal"
-            className="h-full w-full"
-        >
+        <div className="w-full h-full flex">
             <div className="hidden md:flex bg-zinc-800">
                 <Sidenav profile={data!} />
             </div>
-            <ResizablePanel className="hidden md:flex">
-                { children }     
-            </ResizablePanel>
-        </ResizablePanelGroup>
+            <Conversations profile={data!} />
+            { children }
+        </div>
     );
 
 };
