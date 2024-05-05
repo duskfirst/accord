@@ -27,40 +27,38 @@ const MessagesBody = ({ profile, conversation }: MessagesBodyProps) => {
     if (!data?.pages.length) {
         return (
             <div className="flex items-center justify-center h-full w-full">
-                Conversation between { profile.username } and { conversation.other.username }
+                Conversation between {profile.username} and {conversation.other.username}
             </div>
         );
+
     }
 
     return (
-
-        <div>
+        <>
             <Button onClick={() => hasNextPage && !isFetchingNextPage && !isFetching && fetchNextPage()}>
                 load more
             </Button>
-            <ScrollArea>
-                <div className="flex flex-col-reverse overflow-scroll h-fit">
-                    {
-                        data.pages.map((page, index) => (
-                            <Fragment key={index}>
-                                {
-                                    page.data.map((message, index) => (
-                                        <Message
-                                            key={index}
-                                            sender={message.sent_by === profile.id ? profile : conversation.other}
-                                            profile={profile}
-                                            conversation={conversation}
-                                            message={message}
-                                        />
-                                    ))
-                                }
-                            </Fragment>
-                        ))
-                    }
-                </div>
-            </ScrollArea>
-            
-        </div>
+            < div className="flex flex-col-reverse overflow-auto h-full border-2" >
+                {
+                    data.pages.map((page, index) => (
+                        <Fragment key={index}>
+                            {
+                                page.data.map((message, index) => (
+                                    <Message
+                                        key={index}
+                                        sender={message.sent_by === profile.id ? profile : conversation.other}
+                                        profile={profile}
+                                        conversation={conversation}
+                                        message={message}
+                                    />
+                                ))
+                            }
+                        </Fragment>
+                    ))
+                }
+            </div >
+        </>
+
     );
 
 };

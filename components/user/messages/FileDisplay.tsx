@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { Download } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import ReactAudioPlayer from "react-audio-player";
 import Link from "next/link";
 
