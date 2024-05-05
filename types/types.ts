@@ -1,4 +1,4 @@
-export type Message = {
+export type _Message = {
     sender: string,
     receiver: string,
     time: Date,
@@ -7,15 +7,33 @@ export type Message = {
     file?: File,
 };
 
-export type Conversation = {
-    "conversation": Message[],
+export type _Conversation = {
+    "conversation": _Message[],
+};
+
+export interface Conversation {
+    another: string,
+    created_at: string,
+    id: number,
+    one: string,
+};
+
+export interface Message {
+    content: string | null;
+    conversation: number;
+    deleted: boolean;
+    edited: boolean;
+    file_url: string | null;
+    id: number;
+    sent_at: string;
+    sent_by: number;
 };
 
 export interface Profile {
     avatar_url: string | null;
     display_name: string | null;
     email?: string
-    id: string | null;
-    username: string | null;
+    id: string;
+    username: string;
     website: string | null;
 };

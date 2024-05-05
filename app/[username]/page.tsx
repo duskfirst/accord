@@ -1,7 +1,15 @@
-"use client";
-
-const Page = () => {
-  return <div>Page</div>;
+interface ProfilePageParams {
+    params: {
+        username: string
+    };
 };
 
-export default Page;
+const ProfilePage = ({ params } : ProfilePageParams) => {
+    return (
+        <div>
+            You are { params.username }.
+        </div>
+    );
+};
+
+export default ProfilePage;

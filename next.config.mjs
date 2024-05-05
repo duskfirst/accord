@@ -3,8 +3,7 @@ const nextConfig = {
     images: {
         remotePatterns: [
             {
-                hostname: "via.placeholder.com",
-                pathname: "**",
+                hostname: "**", // TODO: Change it back to via.placeholder.com
                 protocol: "https",
             },
         ],

@@ -51,8 +51,8 @@ Run the following code in the `SQL Editor`
 -- Case insensitive text
 create extension if not exists citext;
 
--- Create a table for public profiles
-create table profiles (
+-- Create a table for public profile
+create table profile (
     id uuid references auth.users on delete cascade not null primary key,
     email varchar(255) not null unique,
     username citext unique,
@@ -65,30 +65,30 @@ create table profiles (
 );
 -- Set up Row Level Security (RLS)
 -- See https://supabase.com/docs/guides/auth/row-level-security for more details.
-alter table profiles
+alter table profile
     enable row level security;
 
-create policy "Public profiles are viewable by everyone." on profiles
+create policy "Public profiles are viewable by everyone." on profile
     for select using (true);
 
 -- However email and email_confirmed_at should not be seen by anon
-revoke update, select, delete on table public.profiles from anon;
-grant select(avatar_url, display_name, id, username, website) on table public.profiles to anon;
+revoke update, select, delete on table public.profile from anon;
+grant select(avatar_url, display_name, id, username, website) on table public.profile to anon;
 
-create policy "Users can insert their own profile." on profiles
+create policy "Users can insert their own profile." on profile
     for insert with check ((select auth.uid()) = id);
 
-create policy "Users can update own profile." on profiles
+create policy "Users can update own profile." on profile
   for update using ((select auth.uid()) = id);
 
--- inserts a row into public.profiles
+-- inserts a row into public.profile
 create function public.handle_new_user()
 returns trigger
 language plpgsql
 security definer set search_path = public
 as $$
 begin
-    insert into public.profiles (id, username, email, email_confirmed_at)
+    insert into public.profile (id, username, email, email_confirmed_at)
     values (new.id, new.raw_user_meta_data ->> 'username', new.email, new.email_confirmed_at);
     return new;
 end;
@@ -100,7 +100,7 @@ language plpgsql
 security definer set search_path = public
 as $$
 begin
-    update public.profiles set email_confirmed_at = new.email_confirmed_at where id = new.id;
+    update public.profile set email_confirmed_at = new.email_confirmed_at where id = new.id;
     return new;
 end;
 $$;
@@ -130,6 +130,32 @@ create policy "Anyone can upload an avatar." on storage.objects
 
 create policy "Anyone can update their own avatar." on storage.objects
     for update using ((select auth.uid()) = owner) with check (bucket_id = 'avatars');
+
+-- Conversation Table
+
+create table conversation (
+    id uuid not null primary key,
+    one uuid not null references profile on delete cascade,
+    another uuid not null references profile on delete cascade,
+    created_at timestamp,
+    unique(one, another)
+);
+
+-- Message Table
+
+create table message (
+    id uuid not null primary key,
+    conversation uuid not null references conversation on delete cascade,
+    content text,
+    file_url text,
+    sent_at timestamp,
+    sent_by uuid not null references profile on delete cascade,
+    edited bool default false,
+    deleted bool default false
+);
+
+-- TO DO: Enable Row-Level Security for Conversation and Message tables.
+
 ```
 
 ### Run Dev Server

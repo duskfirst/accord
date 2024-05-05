@@ -22,7 +22,7 @@ export const register = async ({ email, password, username }: RegisterSchema) =>
     if (!error) {
         {
             const { data, error } = await supabase
-                .from("profiles")
+                .from("profile")
                 .update({ username: null })
                 .eq("username", username);
 
@@ -31,7 +31,7 @@ export const register = async ({ email, password, username }: RegisterSchema) =>
             }
         }
         const { data, error } = await supabase
-            .from("profiles")
+            .from("profile")
             .update({ username })
             .eq("email", email);
         return error?.message;
