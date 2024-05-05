@@ -58,6 +58,7 @@ create table profile (
     username citext unique,
     display_name text,
     avatar_url text,
+    header_url text,
     website text,
     email_confirmed_at timestamptz,
 

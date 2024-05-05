@@ -33,6 +33,7 @@ export interface Profile {
     avatar_url: string | null;
     display_name: string | null;
     email?: string
+    header_url: string | null;
     id: string;
     username: string;
     website: string | null;
