@@ -31,31 +31,33 @@ const MessagesBody = ({ profile, conversation }: MessagesBodyProps) => {
             </div>
         );
 
-        {/* <Button onClick={() => hasNextPage && !isFetchingNextPage && !isFetching && fetchNextPage()}>
-                load more
-            </Button> */}
     }
 
     return (
-        <div className="flex flex-col-reverse overflow-auto h-full border-2" >
-            {
-                data.pages.map((page, index) => (
-                    <Fragment key={index}>
-                        {
-                            page.data.map((message, index) => (
-                                <Message
-                                    key={index}
-                                    sender={message.sent_by === profile.id ? profile : conversation.other}
-                                    profile={profile}
-                                    conversation={conversation}
-                                    message={message}
-                                />
-                            ))
-                        }
-                    </Fragment>
-                ))
-            }
-        </div >
+        <>
+            <Button onClick={() => hasNextPage && !isFetchingNextPage && !isFetching && fetchNextPage()}>
+                load more
+            </Button>
+            < div className="flex flex-col-reverse overflow-auto h-full border-2" >
+                {
+                    data.pages.map((page, index) => (
+                        <Fragment key={index}>
+                            {
+                                page.data.map((message, index) => (
+                                    <Message
+                                        key={index}
+                                        sender={message.sent_by === profile.id ? profile : conversation.other}
+                                        profile={profile}
+                                        conversation={conversation}
+                                        message={message}
+                                    />
+                                ))
+                            }
+                        </Fragment>
+                    ))
+                }
+            </div >
+        </>
 
     );
 
