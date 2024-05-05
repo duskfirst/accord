@@ -29,8 +29,12 @@ const UserLayout = async ({ children } : {
             <div className="hidden md:flex bg-zinc-800">
                 <Sidenav profile={data!} />
             </div>
-            <Conversations profile={data!} />
-            { children }
+            <div className="w-full md:w-auto md:min-w-64">
+                <Conversations profile={data!} />
+            </div>
+            <div className="hidden md:flex w-full">
+                { children }
+            </div>
         </div>
     );
 
