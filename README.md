@@ -145,7 +145,7 @@ create table conversation (
 -- Message Table
 
 create table message (
-    id uuid not null primary key,
+    id bigserial not null primary key,
     conversation uuid not null references conversation on delete cascade,
     content text,
     file_url text,
@@ -155,7 +155,6 @@ create table message (
     deleted bool default false
 );
 
--- TO DO: Enable Row-Level Security for Conversation and Message tables.
 
 ```
 

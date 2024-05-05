@@ -14,7 +14,7 @@ export type _Conversation = {
 export interface Conversation {
     another: string,
     created_at: string,
-    id: number,
+    id: string,
     one: string,
 };
 
@@ -26,7 +26,7 @@ export interface Message {
     file_url: string | null;
     id: number;
     sent_at: string;
-    sent_by: number;
+    sent_by: string;
 };
 
 export interface Profile {

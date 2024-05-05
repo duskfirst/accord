@@ -20,11 +20,9 @@ const Conversation = ({ conversation } : ConversationProps) => {
                     </AvatarFallback>
                 </Avatar>
             </Link>
-            <div className="flex gap-1 flex-col cursor-pointer w-full">
-                <span className="text-md font-bold hover:underline">
-                    { conversation.other.display_name || conversation.other.username }
-                </span>
-            </div>
+            <Link href={`/conversation/${conversation.id}`} className="cursor-pointer w-full h-full hover:underline text-md font-bold p-2">
+                { conversation.other.display_name || conversation.other.username }
+            </Link>
         </div>
     );
 };

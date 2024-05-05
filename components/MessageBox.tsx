@@ -67,7 +67,6 @@ const MessageBox = ({ msg, user, onDelete, onEdit }: Props) => {
                     </div>
                 }
             </div >
-
         </div>
     );
 };

@@ -7,7 +7,7 @@ import { createServerClient } from "@/utils/supabase/server";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 
 
-const UserLayout = async ({ children } : {
+const UserLayout = async ({ children }: {
     children: React.ReactNode
 }) => {
 
@@ -25,12 +25,16 @@ const UserLayout = async ({ children } : {
         .single() as PostgrestSingleResponse<Profile>;
 
     return (
-        <div className="w-full h-full flex">
-            <div className="hidden md:flex bg-zinc-800">
+        <div className="w-screen h-screen flex max-h-full max-w-full">
+            <div className="hidden h-full flex-none md:flex bg-zinc-800">
                 <Sidenav profile={data!} />
             </div>
-            <Conversations profile={data!} />
-            { children }
+            <div className="w-full h-full md:w-auto md:min-w-64">
+                <Conversations profile={data!} />
+            </div>
+            <div className="hidden md:flex flex-1 h-full">
+                {children}
+            </div>
         </div>
     );
 
