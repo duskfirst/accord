@@ -1,7 +1,6 @@
-import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { DialogClose } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Trigger } from "@radix-ui/react-dropdown-menu";
-import { Pencil, Save, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { IoIosMore } from "react-icons/io";
 
 interface UpdateMessageProps {
@@ -11,11 +10,9 @@ interface UpdateMessageProps {
 const UpdateMessage = ({ onEdit, onDelete }: UpdateMessageProps) => {
     const onEditClick = () => {
         onEdit();
-        DialogClose.call;
     };
     const onDeleteClick = () => {
         onDelete();
-        DialogClose.call;
     };
     return (
         <>

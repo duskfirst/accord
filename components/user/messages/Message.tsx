@@ -95,7 +95,7 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                             value={editedValue}
                             className="resize-none max-h-12  md:max-h-11 w-full bg-background rounded-lg  p-2 flex justify-center focus:outline-none"
                         />
-                        <Button className="h-fit font-semibold" onClick={onSave}>Save</Button>
+                        <Button className="h-fit font-semibold border-2 hover:border-primary" onClick={onSave}>Save</Button>
                     </div>
                 }
 
