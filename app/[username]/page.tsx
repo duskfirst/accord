@@ -59,6 +59,7 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
                     <Link href={profile.website}>{profile.website}</Link>
                 )}
             </div>
+            {user && <Link href="https://youtu.be/dQw4w9WgXcQ?si=BbD9zUO11G1OCu2J" className="w-fit h-fit p-4 self-end border-2 rounded-lg">Chat</Link>}
         </div>
     );
 };
