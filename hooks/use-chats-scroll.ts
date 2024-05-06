@@ -24,9 +24,9 @@ export const useChatScroll = (
         const handleScroll = () => {
             const scrollTop = topDiv?.scrollTop;
             console.log("scrolled");
-            // if (scrollTop === 0 && shouldLoadMore) {
-            //     loadMore();
-            // }
+            if (scrollTop === 0 && shouldLoadMore) {
+                loadMore();
+            }
         };
         topDiv?.addEventListener("scroll", handleScroll);
         return () => {
@@ -53,9 +53,10 @@ export const useChatScroll = (
             return distanceFromBottom <= 100;
         };
 
-        if (shouldAutoScroll()) { }
-        setTimeout(() => {
-            bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-        }, 100);
+        if (shouldAutoScroll()) {
+            setTimeout(() => {
+                bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+            }, 100);
+        }
     }, [bottomRef, chatRef, hasInintialized]);
 };
