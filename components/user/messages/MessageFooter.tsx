@@ -15,6 +15,8 @@ interface MessageFooterProps {
 const MessageFooter = ({ conversation, profile }: MessageFooterProps) => {
     const [inputVal, setInputVal] = useState("");
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
+    const [fileUrl, setFileUrl] = useState("");
+    const [fileType, setFileType] = useState("");
 
     const onClick = () => {
         console.log(inputVal);
@@ -29,8 +31,8 @@ const MessageFooter = ({ conversation, profile }: MessageFooterProps) => {
     };
 
     return (
-        <div className="mb-1 w-full border p-2 pl-2 pr-2 flex items-center justify-center content-center">
-            <FileInput />
+        <div className="mb-1 w-full p-2 pl-2 pr-2 flex items-center justify-center content-center">
+            <FileInput setFileType={setFileType} setFileUrl={setFileUrl} />
             <textarea
                 ref={textAreaRef}
                 id="message"

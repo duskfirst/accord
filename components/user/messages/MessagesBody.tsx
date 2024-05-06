@@ -3,10 +3,8 @@ import { useMessagesQuery } from "@/hooks/use-messages-query";
 import { ExtendedConversation } from "@/types/extended";
 import { Profile } from "@/types/types";
 import Message from "@/components/user/messages/Message";
-import { Fragment, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
+import { Fragment } from "react";
 import { Loader2 } from "lucide-react";
-import { useChatScroll } from "@/hooks/use-chats-scroll";
 
 
 interface MessagesBodyProps {
@@ -24,15 +22,6 @@ const MessagesBody = ({ profile, conversation }: MessagesBodyProps) => {
         isFetching
     } = useMessagesQuery(conversation.id);
 
-    const chatRef = useRef<HTMLDivElement>(null);
-    const bottomRef = useRef<HTMLDivElement>(null);
-    useChatScroll({
-        chatRef,
-        bottomRef,
-        loadMore: fetchNextPage,
-        shouldLoadMore: !fetchNextPage && !!hasNextPage,
-    });
-
     if (!data?.pages.length) {
         return (
             <div className="flex flex-col items-center gap-4 justify-center h-full w-full">
@@ -45,7 +34,7 @@ const MessagesBody = ({ profile, conversation }: MessagesBodyProps) => {
 
     return (
         <>
-            <div ref={chatRef} className="flex flex-col overflow-y-auto items-center h-full border-2">
+            <div className="flex flex-col overflow-y-auto items-center h-full">
                 <div className="flex-1" />
                 {hasNextPage && (
                     isFetchingNextPage ?
@@ -77,7 +66,7 @@ const MessagesBody = ({ profile, conversation }: MessagesBodyProps) => {
                         ))
                     }
                 </div >
-                <div ref={bottomRef} />
+                <div />
             </div >
         </>
 
