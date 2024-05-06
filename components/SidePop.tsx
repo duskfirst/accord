@@ -1,6 +1,6 @@
 import { ChevronRight } from "lucide-react";
-import FriendList from "./FriendList";
-import Sidenav from "./Sidenav";
+// import FriendList from "./FriendList";
+// import Sidenav from "./Sidenav";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
@@ -18,8 +18,8 @@ const SidePop = ({ className, setReceiver, receiver }: Props) => (
             </Button>
         </SheetTrigger>
         <SheetContent side="left" className="flex p-2 gap-1 w-full max-h-full">
-            <Sidenav />
-            <FriendList receiver={receiver} setReceiver={setReceiver} className="flex-grow border" />
+            {/* <Sidenav /> */}
+            {/* <FriendList receiver={receiver} setReceiver={setReceiver} className="flex-grow border" /> */}
         </SheetContent>
     </Sheet>
 );

@@ -12,7 +12,7 @@ interface ConversationsProps {
     profile: Profile;
 };
 
-const Conversations = async ({ profile } : ConversationsProps) => {
+const Conversations = async ({ profile }: ConversationsProps) => {
 
     const supabase = createServerClient();
 
@@ -38,8 +38,10 @@ const Conversations = async ({ profile } : ConversationsProps) => {
         if (error) {
             return <ConversationsError />;
         }
-        profiles[data.id] = data;
-        conversations.push({ ...conversation, other: data });
+        if (data.id) {
+            profiles[data.id] = data;
+            conversations.push({ ...conversation, other: data });
+        }
     }
 
     return (
