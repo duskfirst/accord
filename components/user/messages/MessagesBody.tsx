@@ -45,32 +45,39 @@ const MessagesBody = ({ profile, conversation }: MessagesBodyProps) => {
 
     return (
         <>
-            <div id="div" ref={chatRef} className="flex flex-col overflow-auto items-center h-full border-2" >
+            <div ref={chatRef} className="flex flex-col overflow-y-auto items-center h-full border-2">
+                <div className="flex-1" />
                 {hasNextPage && (
                     isFetchingNextPage ?
                         <Loader2 className="h-6 w-6 text-zinc-500 animate-spin my-4" />
                         :
-                        <button onClick={() => hasNextPage && !isFetchingNextPage && !isFetching && fetchNextPage()} className="text-muted hover:text-foreground text-sm">
-                            Load More Messages
+                        <button
+                            onClick={() => hasNextPage && !isFetchingNextPage && !isFetching && fetchNextPage()}
+                            className="text-zinc-500 mt-6 hover:text-foreground text-md"
+                        >
+                            Load More Messages...
                         </button>
                 )}
-                {
-                    data.pages.map((page, index) => (
-                        <Fragment key={index}>
-                            {
-                                page.data.map((message, index) => (
-                                    <Message
-                                        key={index}
-                                        sender={message.sent_by === profile.id ? profile : conversation.other}
-                                        profile={profile}
-                                        conversation={conversation}
-                                        message={message}
-                                    />
-                                ))
-                            }
-                        </Fragment>
-                    ))
-                }
+                <div className="flex flex-col-reverse items-center w-full mt-auto h-full" >
+                    {
+                        data.pages.map((page, index) => (
+                            <Fragment key={index}>
+                                {
+                                    page.data.map((message, index) => (
+                                        <Message
+                                            key={index}
+                                            sender={message.sent_by === profile.id ? profile : conversation.other}
+                                            profile={profile}
+                                            conversation={conversation}
+                                            message={message}
+                                        />
+                                    ))
+                                }
+                            </Fragment>
+                        ))
+                    }
+                </div >
+                <div ref={bottomRef} />
             </div >
         </>
 
