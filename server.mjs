@@ -90,20 +90,33 @@ const updateMessage = async (req, res, user, supabase) => {
             throw new Error("Internal Error");
         }
 
-        const { data: conversation, error: conversationError } = await supabase
+        const { data: conversation } = await supabase
             .from("conversation")
             .select("one,another")
-            .eq("id", oldMessage.conversation);
-        
+            .eq("id", oldMessage.conversation)
+            .single();
+
+            
         const { data: message } = await supabase
             .from("message")
             .select("*")
-            .eq("id", oldMessage.id);
+            .eq("id", oldMessage.id)
+            .single();
+            
+        const idKey = oldMessage.conversation;
+        const queryKey = "conversation";
+        const updateKey = `${queryKey}|${idKey}|update`;
         
-        if (conversation?.length) {
-            const receiver = conversation[0].one === user.id ? conversation[0].another : conversation[0].one;
-            if (user_socket[receiver]) {
-                io.to(user_socket[receiver]).emit(`conversation/${oldMessage.conversation}/update`, message);
+        if (conversation) {
+            const one = conversation.one;
+            const another = conversation.another;
+            const oneId = user_socket.get(one);
+            const anotherId = user_socket.get(another);
+            if (anotherId) {
+                io.to(anotherId).emit(updateKey, message);
+            }
+            if (oneId) {
+                io.to(oneId).emit(updateKey, message);
             }
         }
 

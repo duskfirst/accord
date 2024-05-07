@@ -5,6 +5,7 @@ import { Profile } from "@/types/types";
 import Message from "@/components/user/messages/Message";
 import { Fragment } from "react";
 import { Loader } from "lucide-react";
+import { useUpsertSocket } from "@/hooks/use-upsert-socket";
 
 
 interface MessagesBodyProps {
@@ -14,13 +15,18 @@ interface MessagesBodyProps {
 
 const MessagesBody = ({ profile, conversation }: MessagesBodyProps) => {
 
+    const idKey = conversation.id;
+    const queryKey = "conversation";
+
     const {
         data,
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
         isFetching
-    } = useMessagesQuery(conversation.id);
+    } = useMessagesQuery(idKey, queryKey);
+
+    useUpsertSocket(idKey, queryKey);
 
     if (!data?.pages.length) {
         return (

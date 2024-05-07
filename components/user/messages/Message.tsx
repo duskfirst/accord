@@ -46,9 +46,6 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                 "Content-Type": "application/json",
             },
         });
-        if (response.ok) {
-            console.log("success");
-        }
     };
 
 
