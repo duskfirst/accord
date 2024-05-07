@@ -14,7 +14,7 @@ const Home = () => {
                 <Button className="w-32">
                     <Link href={"/register"} >Register</Link>
                 </Button>
-            </div>           
+            </div>
         </div>
     );
 };
