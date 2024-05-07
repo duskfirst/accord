@@ -1,8 +1,7 @@
 import Image from "next/image";
-import { Download } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import ReactAudioPlayer from "react-audio-player";
-import Link from "next/link";
+import { File } from "lucide-react";
 
 interface FileDisplayProps {
     file_url: string;
@@ -51,8 +50,9 @@ const FileDisplay = ({ file_type, file_url }: FileDisplayProps) => {
         default:
             return (
 
-                <div className="w-max p-4 gap-4 flex rounded-md justify-center items-center bg-accent">
-                    <div className="pb-1 grid gap-2">
+                <div className="w-1/3 p-4 gap-4 flex rounded-md hover:bg-background justify-center items-center bg-accent">
+                    <div className="pb-1 flex w-full gap-2  items-center">
+                        <File />
                         <span className="font-semibold text-md">
                             File
                         </span>
