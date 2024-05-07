@@ -15,10 +15,12 @@ const Home = () => {
         <Image src={logo} alt="Logo" className="App-logo" />
         <h1 className="App-heading">CHAT APP</h1>{" "}
         {/* Moved this line below the image */}
-        <div className="App-link">
-          <a>
+        <div className="App-link flex flex-col gap-1">
+          <a href="/login">
             <button className="App-button">LOGIN</button>
-            <p className="App-text">Not registered yet?</p>
+          </a>
+          <p className="App-text">Not registered yet?</p>
+          <a href="/register">
             <button className="App-button">REGISTER</button>
           </a>
         </div>
