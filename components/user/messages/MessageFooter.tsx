@@ -19,6 +19,8 @@ const MessageFooter = ({ conversation, profile }: MessageFooterProps) => {
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const fileDialogueRef = useRef<HTMLButtonElement>(null);
     const [file, setFile] = useState<File>();
+    const [fileUrl, setFileUrl] = useState("");
+    const [fileType, setFileType] = useState("");
 
     const onClick = () => {
         console.log(inputVal);
@@ -36,6 +38,8 @@ const MessageFooter = ({ conversation, profile }: MessageFooterProps) => {
     const setFileData = (fileData: File) => {
         setFile(fileData);
         console.log(file);
+        setFileUrl(URL.createObjectURL(fileData));
+        setFileType(fileData.type);
         console.log("setFileData");
         fileDialogueRef.current?.click();
         textAreaRef.current?.focus();
