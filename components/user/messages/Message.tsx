@@ -1,7 +1,13 @@
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Conversation, Message as MessageType, Profile } from "@/types/types";
-import { CircleUserRound, Pencil, Trash2 } from "lucide-react";
+import { CircleUserRound, Download } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import FileDisplay from "@/components/user/messages/FileDisplay";
+import MessageOptions from "@/components/user/messages/MessageOptions";
+import { Button } from "@/components/ui/button";
 
 interface MessageProps {
     conversation: Conversation;
@@ -11,11 +17,43 @@ interface MessageProps {
 };
 
 const Message = ({ sender, conversation, message, profile }: MessageProps) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [editedValue, setEditedValue] = useState(message.content || "");
 
+    const onSave = () => {
+        if (message.content !== editedValue) {
+            console.log(editedValue);
+        }
+        setIsEditing(false);
+    };
+
+    const onEdit = () => {
+
+        setIsEditing(true);
+
+    };
+
+
+    const onDelete = async () => {
+        const response = await fetch("/api/socket/io", {
+            method: "PUT",
+            body: JSON.stringify({
+                deleted: true,
+                id: message.id,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+    };
+
+
+    const dateTime = (new Date(message.sent_at)).toLocaleString().split(",");
     return (
         <div className="flex px-4 my-2 w-full hover:bg-accent">
             <div className="flex flex-col items-center justify-start p-2">
-                <Link href={`/${sender.username}`} className="cursor-pointer">
+                <Link href={`/ ${sender.username}`} className="cursor-pointer">
                     <Avatar>
                         <AvatarImage src={sender.avatar_url || "https://github.com/shadcn.png"} />
                         <AvatarFallback>
@@ -26,22 +64,53 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
             </div>
             <div className="text-start mb-1 flex flex-col p-1 w-full text-gray-100">
                 <div className="flex min-w-fit justify-start gap-4 items-baseline w-full">
-                    <span className="font-bold text-lg align-middle text-start">
+                    <span className="font-bold text-md align-middle text-start">
                         {sender.display_name || sender.username}
                     </span>
                     <span className="text-slate-300 min-w-20 text-wrap text-xs mt-2">
-                        {message.sent_at}
+
+                        {dateTime[1] + " " + dateTime[0]}
                     </span>
-                    <div className="self-end flex-grow flex justify-end">
-                        {<button className="h-fit hover:bg-primary p-1 rounded-md w-fit" ><Pencil className="h-4 md:h-5" /> </button>}
-                        <button className="h-fit hover:bg-destructive p-1 rounded-md w-fit" ><Trash2 className="h-4 md:h-5" /></button>
+                    {
+                        !isEditing &&
+                        <div className="self-end flex gap-4 flex-grow justify-end">
+                            {
+                                message.deleted || message.sent_by === profile.id && <MessageOptions file_url={message.file_url} onDelete={onDelete} onEdit={onEdit} />
+                            }
+                        </div>
+                    }
+                </div>
+                {
+                    message.file_url && message.file_type &&
+                    <FileDisplay file_url={message.file_url} file_type={message.file_type} />
+                }
+                {
+                    !isEditing && !message.file_url &&
+                    <div className="text-wrap whitespace-pre-line text-sm">
+                        <p className={message.deleted ? "italic text-gray-300" : ""}>
+                            {message.content}
+                        </p>
+                        {
+                            message.deleted || message.edited &&
+                            <span className="text-slate-300 w-fit text-xs mx-2">
+                                Edited
+                            </span>
+                        }
                     </div>
-                </div>
-                <div className="text-wrap whitespace-pre-line">
-                    {message.content}
-                </div>
+                }
+                {
+                    isEditing &&
+                    <div className="flex items-center text-sm gap-2">
+                        <textarea
+                            onChange={(event) => setEditedValue(event.target.value)}
+                            value={editedValue}
+                            className="resize-none max-h-12  md:max-h-11 w-full bg-background rounded-lg  p-2 flex justify-center focus:outline-none"
+                        />
+                        <Button className="h-fit font-semibold border-2 hover:border-primary" onClick={onSave}>Save</Button>
+                    </div>
+                }
             </div>
-        </div>
+        </div >
     );
 
 };

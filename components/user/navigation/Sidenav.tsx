@@ -40,7 +40,7 @@ const Sidenav = ({ profile } : SidenavProps) => {
                 <TooltipProvider delayDuration={0}>
                     <Tooltip>
                         <TooltipTrigger>
-                            <Link href={"/profile"}>
+                            <Link href={`/${profile.username}`}>
                                 <Avatar>
                                     <AvatarImage src={profile.avatar_url || "https://github.com/shadcn.png"} />
                                     <AvatarFallback>

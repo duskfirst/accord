@@ -1,16 +1,3 @@
-export type _Message = {
-    sender: string,
-    receiver: string,
-    time: Date,
-    text?: string
-    id: string,
-    file?: File,
-};
-
-export type _Conversation = {
-    "conversation": _Message[],
-};
-
 export interface Conversation {
     another: string,
     created_at: string,
@@ -24,6 +11,7 @@ export interface Message {
     deleted: boolean;
     edited: boolean;
     file_url: string | null;
+    file_type: string | null;
     id: number;
     sent_at: string;
     sent_by: string;

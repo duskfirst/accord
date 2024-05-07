@@ -149,12 +149,24 @@ create table message (
     conversation uuid not null references conversation on delete cascade,
     content text,
     file_url text,
+    file_type text,
     sent_at timestamp,
     sent_by uuid not null references profile on delete cascade,
     edited bool default false,
     deleted bool default false
 );
 
+alter table message
+    enable row level security;
+
+create policy "Members can create a message" on message
+    for insert with check((select auth.uid()) = sent_by);
+    
+create policy "Members can view their conversation messages" on message
+    for select using ((select auth.uid()) in (select one from conversation where conversation.id = message.conversation) or (select auth.uid()) in (select another from conversation where conversation.id = message.conversation));
+
+create policy "Sender can update the message" on message
+    for update using ((select auth.uid()) = sent_by and not deleted);
 
 ```
 
@@ -169,4 +181,11 @@ npm run dev
 ```
 npm run build
 npm run start
+```
+
+On windows:
+
+```
+npm run build
+npm run start:win
 ```

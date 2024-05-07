@@ -7,16 +7,15 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 const MESSAGE_COUNT = 5; // TODO: Change it to 20
 
 
-export const useMessagesQuery = (conversationId: string) => {
+export const useMessagesQuery = (idKey: string, queryKey: string) => {
     
     const supabase = createBrowserClient();
     
     const fetchMessages = async ({ pageParam = 0 }) => {
-        console.log(pageParam, conversationId);
         let query = supabase
             .from("message")
             .select("*")
-            .eq("conversation", conversationId)
+            .eq("conversation", idKey)
             .limit(MESSAGE_COUNT)
             .order("id", { ascending: false });
         if (pageParam) {
@@ -36,7 +35,7 @@ export const useMessagesQuery = (conversationId: string) => {
     };
 
     return useInfiniteQuery({
-        queryKey: ["messages", conversationId],
+        queryKey: [idKey, queryKey],
         queryFn: fetchMessages,
         getNextPageParam: lastPage => lastPage?.nextPage,
         initialPageParam: 0,
