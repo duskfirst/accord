@@ -8,6 +8,7 @@ import { useRef, useState } from "react";
 import FileDisplay from "@/components/user/messages/FileDisplay";
 import MessageOptions from "@/components/user/messages/MessageOptions";
 import { Button } from "@/components/ui/button";
+import EmojiPicker from "@/components/user/messages/EmojiPicker";
 
 interface MessageProps {
     conversation: Conversation;
@@ -112,13 +113,17 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                 {
                     isEditing &&
                     <div className="flex flex-col items-center text-sm gap-2">
-                        <textarea
-                            onKeyDown={(e) => onKeyEvent(e)}
-                            ref={textAreaRef}
-                            onChange={(event) => setEditedValue(event.target.value)}
-                            value={editedValue}
-                            className="resize-none w-full bg-background rounded-lg  p-2 flex justify-center focus:outline-none"
-                        />
+                        <div className="flex w-full bg-background rounded-md">
+                            <textarea
+                                onKeyDown={(e) => onKeyEvent(e)}
+                                ref={textAreaRef}
+                                onChange={(event) => setEditedValue(event.target.value)}
+                                value={editedValue}
+                                className="resize-none w-full  bg-background rounded-lg p-2 flex justify-center focus:outline-none"
+
+                            />
+                            <EmojiPicker inputVal={editedValue} setInputVal={setEditedValue} />
+                        </div>
                         <div className="grid grid-cols-2 gap-4 self-start">
                             <Button
                                 className="h-fit font-semibold py-1 w-full border-2 border-primary"

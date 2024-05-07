@@ -18,6 +18,7 @@ export const ProfileProvider = ({
 }) => {
 
     const [profile, setProfile] = useState<Profile>({
+        header_url: null,
         avatar_url: null,
         display_name: null,
         id: "",
