@@ -41,7 +41,6 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
         console.log("delete ", message.content);
     };
 
-
     if (message.deleted) return null;
 
     return (
@@ -62,7 +61,7 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                         {sender.display_name || sender.username}
                     </span>
                     <span className="text-slate-300 min-w-20 text-wrap text-xs mt-2">
-                        {message.sent_at}
+                        {(new Date(message.sent_at)).toDateString()}
                     </span>
                     {
                         !isEditing &&
@@ -86,12 +85,7 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                     !isEditing && !message.file_url &&
                     <div className="text-wrap whitespace-pre-line text-sm">
                         {message.content}
-                        {
-                            message.edited &&
-                            < span className="text-slate-300 w-fit text-xs mx-2">
-                                Edited
-                            </span>
-                        }
+
                     </div>
                 }
                 {
@@ -105,7 +99,12 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                         <Button className="h-fit font-semibold border-2 hover:border-primary" onClick={onSave}>Save</Button>
                     </div>
                 }
-
+                {
+                    message.edited &&
+                    <span className="text-zinc-600 w-full text-sm mx-2 text-end">
+                        Edited
+                    </span>
+                }
             </div>
         </div >
     );
