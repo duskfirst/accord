@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Conversation, Message as MessageType, Profile } from "@/types/types";
 import { CircleUserRound, Download } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import FileDisplay from "@/components/user/messages/FileDisplay";
 import MessageOptions from "@/components/user/messages/MessageOptions";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,7 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [editedValue, setEditedValue] = useState(message.content || "");
+    const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
     const onSave = () => {
         if (message.content !== editedValue) {
@@ -29,11 +30,21 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
     };
 
     const onEdit = () => {
-
         setIsEditing(true);
-
+        setTimeout(() => {
+            textAreaRef.current?.focus();
+            textAreaRef.current!.selectionStart = textAreaRef.current!.value.length;
+        }, 1);
     };
 
+    const onKeyEvent = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === "Enter" && e.ctrlKey) {
+            onSave();
+        }
+        else if (e.key === "Escape") {
+            setIsEditing(false);
+        }
+    };
 
     const onDelete = async () => {
         const response = await fetch("/api/socket/io", {
@@ -100,13 +111,27 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                 }
                 {
                     isEditing &&
-                    <div className="flex items-center text-sm gap-2">
+                    <div className="flex flex-col items-center text-sm gap-2">
                         <textarea
+                            onKeyDown={(e) => onKeyEvent(e)}
+                            ref={textAreaRef}
                             onChange={(event) => setEditedValue(event.target.value)}
                             value={editedValue}
-                            className="resize-none max-h-12  md:max-h-11 w-full bg-background rounded-lg  p-2 flex justify-center focus:outline-none"
+                            className="resize-none w-full bg-background rounded-lg  p-2 flex justify-center focus:outline-none"
                         />
-                        <Button className="h-fit font-semibold border-2 hover:border-primary" onClick={onSave}>Save</Button>
+                        <div className="grid grid-cols-2 gap-4 self-start">
+                            <Button
+                                className="h-fit font-semibold py-1 w-full border-2 border-primary"
+                                onClick={onSave}>
+                                Save
+                            </Button>
+                            <Button
+                                variant={"destructive"}
+                                className="h-fit w-full py-1 font-semibold border-2 border-destructive hover:bg-transparent"
+                                onClick={() => setIsEditing(false)}>
+                                Cancel
+                            </Button>
+                        </div>
                     </div>
                 }
             </div>
