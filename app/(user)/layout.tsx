@@ -1,6 +1,7 @@
 import Home from "@/components/home/Home";
 import Conversations from "@/components/user/conversations/Conversations";
 import Sidenav from "@/components/user/navigation/Sidenav";
+import { SocketProvider } from "@/components/providers/socket-provider";
 
 import { Profile } from "@/types/types";
 import { createServerClient } from "@/utils/supabase/server";
@@ -33,7 +34,9 @@ const UserLayout = async ({ children }: {
                 <Conversations profile={data!} />
             </div>
             <div className="hidden md:flex flex-1 h-full">
-                {children}
+                <SocketProvider>
+                    {children}
+                </SocketProvider>
             </div>
         </div>
     );

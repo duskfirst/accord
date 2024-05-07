@@ -1,16 +1,3 @@
-export type _Message = {
-    sender: string,
-    receiver: string,
-    time: Date,
-    text?: string
-    id: string,
-    file?: File,
-};
-
-export type _Conversation = {
-    "conversation": _Message[],
-};
-
 export interface Conversation {
     another: string,
     created_at: string,
@@ -34,7 +21,7 @@ export interface Profile {
     avatar_url: string | null;
     display_name: string | null;
     email?: string;
-    id: string | null;
-    username: string | null;
+    id: string;
+    username: string;
     website: string | null;
 };
