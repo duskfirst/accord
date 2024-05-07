@@ -1,14 +1,12 @@
 "use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Conversation, Message as MessageType, Profile } from "@/types/types";
 import { CircleUserRound, Download } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import FileDisplay from "./FileDisplay";
-import { IoIosMore } from "react-icons/io";
-import UpdateMessage from "./UpdateMessage";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import FileDisplay from "@/components/user/messages/FileDisplay";
+import UpdateMessage from "@/components/user/messages/UpdateMessage";
 import { Button } from "@/components/ui/button";
 
 interface MessageProps {
@@ -21,7 +19,7 @@ interface MessageProps {
 const Message = ({ sender, conversation, message, profile }: MessageProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
-    const [editedValue, setEditedValue] = useState(message.content ? message.content : "");
+    const [editedValue, setEditedValue] = useState(message.content || "");
 
     const onSave = () => {
         if (message.content !== editedValue) {
@@ -37,9 +35,22 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
     };
 
 
-    const onDelete = () => {
-        console.log("delete ", message.content);
+    const onDelete = async () => {
+        const response = await fetch("/api/socket/io", {
+            method: "PUT",
+            body: JSON.stringify({
+                deleted: true,
+                id: message.id,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        if (response.ok) {
+            console.log("success");
+        }
     };
+
 
     if (message.deleted) return null;
 
@@ -72,8 +83,9 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                                     <Download />
                                 </Link>
                             }
-                            <UpdateMessage onDelete={onDelete} onEdit={onEdit} />
-
+                            {
+                                message.sent_by === profile.id && <UpdateMessage onDelete={onDelete} onEdit={onEdit} />
+                            }
                         </div>
                     }
                 </div>
@@ -85,7 +97,12 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                     !isEditing && !message.file_url &&
                     <div className="text-wrap whitespace-pre-line text-sm">
                         {message.content}
-
+                        {
+                            message.edited &&
+                            <span className="text-slate-300 w-fit text-xs mx-2">
+                                Edited
+                            </span>
+                        }
                     </div>
                 }
                 {

@@ -68,17 +68,17 @@ create table profile (
 alter table profile
     enable row level security;
 
-create policy 'Public profiles are viewable by everyone.' on profile
+create policy "Public profiles are viewable by everyone." on profile
     for select using (true);
 
 -- However email and email_confirmed_at should not be seen by anon
 revoke update, select, delete on table public.profile from anon;
 grant select(avatar_url, display_name, id, username, website) on table public.profile to anon;
 
-create policy 'Users can insert their own profile.' on profile
+create policy "Users can insert their own profile." on profile
     for insert with check ((select auth.uid()) = id);
 
-create policy 'Users can update own profile.' on profile
+create policy "Users can update own profile." on profile
   for update using ((select auth.uid()) = id);
 
 -- inserts a row into public.profile
@@ -122,13 +122,13 @@ insert into storage.buckets (id, name)
 
 -- Set up access controls for storage.
 -- See https://supabase.com/docs/guides/storage/security/access-control#policy-examples for more details.
-create policy 'Avatar images are publicly accessible.' on storage.objects
+create policy "Avatar images are publicly accessible." on storage.objects
     for select using (bucket_id = 'avatars');
 
-create policy 'Anyone can upload an avatar.' on storage.objects
+create policy "Anyone can upload an avatar." on storage.objects
     for insert with check (bucket_id = 'avatars');
 
-create policy 'Anyone can update their own avatar.' on storage.objects
+create policy "Anyone can update their own avatar." on storage.objects
     for update using ((select auth.uid()) = owner) with check (bucket_id = 'avatars');
 
 -- Conversation Table
@@ -140,17 +140,6 @@ create table conversation (
     created_at timestamp,
     unique(one, another)
 );
-
-alter table conversation
-    enable row level security;
-
-create policy 'Members can view their conversations' on conversation
-    for select using (auth.uid() = conversation.one or auth.uid() = conversation.another);
-
-create policy 'Members can add a conversation' on conversation
-    for insert with check (auth.uid() = conversation.one or auth.uid() = conversation.another);
-
-revoke update, delete on table public.conversation from anon;
 
 -- Message Table
 
@@ -169,19 +158,14 @@ create table message (
 alter table message
     enable row level security;
 
-create policy 'Members can view their conversation messages' on message
-    for select using ((
-        select true from conversation where conversation.id = message.conversation and (
-            auth.uid() = conversation.one or auth.uid() = conversation.another
-    )));
+create policy "Members can create a message" on message
+    for insert with check((select auth.uid()) = sent_by);
+    
+create policy "Members can view their conversation messages" on message
+    for select using ((select auth.uid()) in (select one from conversation where conversation.id = message.conversation) or (select auth.uid()) in (select another from conversation where conversation.id = message.conversation));
 
-create policy 'Members can create a message' on message
-    for insert with check(auth.uid() = sent_by);
-
-create policy 'Sender can update the message' on message
-    for update using (auth.uid() = sent_by and not deleted);
-
-revoke delete on table public.message from anon;
+create policy "Sender can update the message" on message
+    for update using ((select auth.uid()) = sent_by and not deleted);
 
 ```
 

@@ -37,7 +37,7 @@ const MessagesBody = ({ profile, conversation }: MessagesBodyProps) => {
             <div className="flex flex-col overflow-y-auto items-center h-full">
                 <div className="flex-1" />
                 {hasNextPage && (
-                    isFetchingNextPage ?
+                    isFetchingNextPage || isFetching ?
                         <Loader2 className="h-6 w-6 text-zinc-500 animate-spin my-4" />
                         :
                         <button
@@ -47,14 +47,14 @@ const MessagesBody = ({ profile, conversation }: MessagesBodyProps) => {
                             Load More Messages...
                         </button>
                 )}
-                <div className="flex flex-col-reverse items-center w-full mt-auto h-full" >
+                <div className="flex flex-col-reverse items-center w-full mt-auto" >
                     {
                         data.pages.map((page, index) => (
                             <Fragment key={index}>
                                 {
                                     page.data.map((message, index) => (
                                         <Message
-                                            key={index}
+                                            key={message.id}
                                             sender={message.sent_by === profile.id ? profile : conversation.other}
                                             profile={profile}
                                             conversation={conversation}

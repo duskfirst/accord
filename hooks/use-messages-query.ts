@@ -12,7 +12,6 @@ export const useMessagesQuery = (conversationId: string) => {
     const supabase = createBrowserClient();
     
     const fetchMessages = async ({ pageParam = 0 }) => {
-        console.log(pageParam, conversationId);
         let query = supabase
             .from("message")
             .select("*")
