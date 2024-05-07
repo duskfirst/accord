@@ -4,7 +4,7 @@ import { ExtendedConversation } from "@/types/extended";
 import { Profile } from "@/types/types";
 import Message from "@/components/user/messages/Message";
 import { Fragment } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader } from "lucide-react";
 
 
 interface MessagesBodyProps {
@@ -25,7 +25,7 @@ const MessagesBody = ({ profile, conversation }: MessagesBodyProps) => {
     if (!data?.pages.length) {
         return (
             <div className="flex flex-col items-center gap-4 justify-center h-full w-full">
-                <Loader2 className="h-7 w-7 text-zinc-500 animate-spin" />
+                <Loader className="h-7 w-7 text-zinc-500 animate-spin" />
                 Conversation between {profile.username} and {conversation.other.username}
             </div>
         );
@@ -38,7 +38,7 @@ const MessagesBody = ({ profile, conversation }: MessagesBodyProps) => {
                 <div className="flex-1" />
                 {hasNextPage && (
                     isFetchingNextPage || isFetching ?
-                        <Loader2 className="h-6 w-6 text-zinc-500 animate-spin my-4" />
+                        <Loader className="h-6 w-6 text-zinc-500 animate-spin my-4" />
                         :
                         <button
                             onClick={() => hasNextPage && !isFetchingNextPage && !isFetching && fetchNextPage()}

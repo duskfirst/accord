@@ -6,7 +6,7 @@ import { CircleUserRound, Download } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import FileDisplay from "@/components/user/messages/FileDisplay";
-import UpdateMessage from "@/components/user/messages/UpdateMessage";
+import MessageOptions from "@/components/user/messages/MessageOptions";
 import { Button } from "@/components/ui/button";
 
 interface MessageProps {
@@ -52,6 +52,7 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
     };
 
 
+    const dateTime = (new Date(message.sent_at)).toLocaleString().split(",");
     return (
         <div className="flex px-4 my-2 w-full hover:bg-accent">
             <div className="flex flex-col items-center justify-start p-2">
@@ -70,19 +71,14 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                         {sender.display_name || sender.username}
                     </span>
                     <span className="text-slate-300 min-w-20 text-wrap text-xs mt-2">
-                        {(new Date(message.sent_at)).toDateString()}
+
+                        {dateTime[1] + " " + dateTime[0]}
                     </span>
                     {
                         !isEditing &&
                         <div className="self-end flex gap-4 flex-grow justify-end">
                             {
-                                message.file_url &&
-                                <Link href={message.file_url} target="_blank" download className="self-end" >
-                                    <Download />
-                                </Link>
-                            }
-                            {
-                                message.deleted || message.sent_by === profile.id && <UpdateMessage onDelete={onDelete} onEdit={onEdit} />
+                                message.deleted || message.sent_by === profile.id && <MessageOptions file_url={message.file_url} onDelete={onDelete} onEdit={onEdit} />
                             }
                         </div>
                     }
@@ -98,7 +94,7 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                             {message.content}
                         </p>
                         {
-                            message.deleted || message.edited  &&
+                            message.deleted || message.edited &&
                             <span className="text-slate-300 w-fit text-xs mx-2">
                                 Edited
                             </span>
