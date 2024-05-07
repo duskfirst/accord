@@ -1,8 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { ExtendedConversation } from "@/types/extended";
-import { Message, Profile } from "@/types/types";
-import { SendHorizontal, Smile, File } from "lucide-react";
+import { Profile } from "@/types/types";
+import { SendHorizontal } from "lucide-react";
 import { useState, useRef } from "react";
 import FileInput from "./FileInput";
 import EmojiPicker from "./EmojiPicker";
@@ -18,8 +18,7 @@ const MessageFooter = ({ conversation, profile }: MessageFooterProps) => {
     const [inputVal, setInputVal] = useState("");
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const fileDialogueRef = useRef<HTMLButtonElement>(null);
-    const [fileUrl, setFileUrl] = useState("");
-    const [fileType, setFileType] = useState("");
+    const [file, setFile] = useState<File>();
 
     const onClick = () => {
         console.log(inputVal);
@@ -34,9 +33,9 @@ const MessageFooter = ({ conversation, profile }: MessageFooterProps) => {
             onClick();
     };
 
-    const setFileData = (url: string, FileType: string) => {
-        setFileType(FileType);
-        setFileUrl(url);
+    const setFileData = (fileData: File) => {
+        setFile(fileData);
+        console.log(file);
         console.log("setFileData");
         fileDialogueRef.current?.click();
         textAreaRef.current?.focus();

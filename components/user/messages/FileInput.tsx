@@ -2,22 +2,22 @@ import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import uploadImg from "@/public/cloud-computing_892311.png";
-import { File } from "lucide-react";
+import { Paperclip } from "lucide-react";
 
 interface FileInputProps {
-    setFileData: (url: string, FileType: string) => void;
+    setFileData: (file: File) => void;
     buttonRef: React.RefObject<HTMLButtonElement>;
+
 };
 
 const FileInput = ({ setFileData, buttonRef }: FileInputProps) => {
     const handleChange = (event: any) => {
-        const file: File = event.target.files[0];
-        setFileData(URL.createObjectURL(file), file.type);
+        setFileData(event.target.files[0]);
     };
 
     return (
         <Dialog>
-            <DialogTrigger className="hover:bg-accent p-2 rounded-full"><File /></DialogTrigger>
+            <DialogTrigger className="hover:bg-accent p-2 rounded-full"><Paperclip /></DialogTrigger>
             <DialogContent className="p-4">
 
                 <div className="w-full h-full border border-dashed rounded-md p-1">
