@@ -12,7 +12,7 @@ interface ConversationsProps {
     profile: Profile;
 };
 
-const Conversations = async ({ profile } : ConversationsProps) => {
+const Conversations = async ({ profile }: ConversationsProps) => {
 
     const supabase = createServerClient();
 

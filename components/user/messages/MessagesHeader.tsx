@@ -11,7 +11,7 @@ interface MessagesHeaderProps {
 
 const MessagesHeader = ({ profile, conversation }: MessagesHeaderProps) => {
     return (
-        <div className="flex items-center justify-center p-2 font-bold gap-4">
+        <div className="flex items-center justify-center p-2 border-b font-bold gap-4">
             <Link href={"/profile"}>
                 <Avatar>
                     <AvatarImage src={conversation.other.avatar_url || "https://github.com/shadcn.png"} />

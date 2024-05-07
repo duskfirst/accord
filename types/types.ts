@@ -11,6 +11,7 @@ export interface Message {
     deleted: boolean;
     edited: boolean;
     file_url: string | null;
+    file_type: string | null;
     id: number;
     sent_at: string;
     sent_by: string;

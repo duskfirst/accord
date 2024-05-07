@@ -6,6 +6,8 @@ import { SendHorizontal, Smile, File } from "lucide-react";
 import { useState, useRef } from "react";
 import FileInput from "./FileInput";
 import EmojiPicker from "./EmojiPicker";
+import { Dialog } from "@radix-ui/react-dialog";
+import { DialogTrigger } from "@/components/ui/dialog";
 
 interface MessageFooterProps {
     conversation: ExtendedConversation;
@@ -15,9 +17,13 @@ interface MessageFooterProps {
 const MessageFooter = ({ conversation, profile }: MessageFooterProps) => {
     const [inputVal, setInputVal] = useState("");
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
+    const fileDialogueRef = useRef<HTMLButtonElement>(null);
+    const [fileUrl, setFileUrl] = useState("");
+    const [fileType, setFileType] = useState("");
 
     const onClick = () => {
         console.log(inputVal);
+        setInputVal("");
     };
 
     const keyboardSend = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -28,9 +34,17 @@ const MessageFooter = ({ conversation, profile }: MessageFooterProps) => {
             onClick();
     };
 
+    const setFileData = (url: string, FileType: string) => {
+        setFileType(FileType);
+        setFileUrl(url);
+        console.log("setFileData");
+        fileDialogueRef.current?.click();
+        textAreaRef.current?.focus();
+    };
+
     return (
-        <div className="mb-1 w-full border p-2 pl-2 pr-2 flex items-center justify-center content-center">
-            <FileInput />
+        <div className="mb-1 w-full p-2 pl-2 pr-2 flex items-center justify-center content-center">
+            <FileInput buttonRef={fileDialogueRef} setFileData={setFileData} />
             <textarea
                 ref={textAreaRef}
                 id="message"
@@ -48,7 +62,7 @@ const MessageFooter = ({ conversation, profile }: MessageFooterProps) => {
                 type="submit"
                 disabled={inputVal === ""}
                 onClick={onClick}
-                className="flex items-center hover:text-ring hover:border  justify-center rounded-md"
+                className="flex items-center hover:text-ring hover:border-primary border-2  justify-center rounded-md"
             >
                 <SendHorizontal />
             </Button>
