@@ -42,17 +42,19 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
         }, 1);
     };
 
-    useEffect(() => {
+    const changeTextAreaHeight = () => {
         if (textAreaRef.current) {
             textAreaRef.current!.style.height = "0";
             textAreaRef.current!.style.height = textAreaRef.current!.scrollHeight + "px";
         }
+    };
+
+    useEffect(() => {
+        changeTextAreaHeight();
     }, [textAreaRef.current?.scrollHeight]);
 
     const onKeyEvent = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        textAreaRef.current!.style.height = "0";
-        textAreaRef.current!.style.height = textAreaRef.current!.scrollHeight + "px";
-
+        changeTextAreaHeight();
         if (e.key === "Enter" && e.ctrlKey) {
             onSave();
         }
@@ -126,8 +128,8 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                 }
                 {
                     isEditing &&
-                    <div className="flex flex-col items-center text-sm gap-2">
-                        <div className="flex w-full bg-background rounded-md">
+                    <div className="flex flex-col text-sm gap-2">
+                        <div className="flex w-full bg-background items-end rounded-md">
                             <textarea
                                 rows={1}
                                 onKeyDown={(e) => onKeyEvent(e)}
@@ -137,7 +139,7 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                                 className="resize-none w-full auto-rows-auto bg-background rounded-lg p-2 flex justify-center focus:outline-none"
 
                             />
-                            <EmojiPicker inputVal={editedValue} setInputVal={setEditedValue} />
+                            <EmojiPicker textAreaRef={textAreaRef} inputVal={editedValue} setInputVal={setEditedValue} />
                         </div>
                         <div className="grid grid-cols-2 gap-4 self-start">
                             <Button
