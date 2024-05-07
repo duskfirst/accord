@@ -1,11 +1,7 @@
 import { z } from "zod";
 
-
 export const RegisterSchema = z.object({
-    email:  z
-        .string()
-        .trim()
-        .email("Email entered is invalid."),
+    email: z.string().trim().email("Email entered is invalid."),
     username: z
         .string()
         .trim()
@@ -18,7 +14,11 @@ export const RegisterSchema = z.object({
         .trim()
         .min(6, "Password must have at least 6 characters")
         .max(30, "Password is too long")
-        .refine(password => /^[\w!@#$%^&*\(\)=+{}\|\\\[\] '";:<>,.\?/~`-]+$/.test(password), "Password contains invalid characters.")
+        .refine(
+            (password) =>
+                /^[\w!@#$%^&*\(\)=+{}\|\\\[\] '";:<>,.\?/~`-]+$/.test(password),
+            "Password contains invalid characters."
+        ),
 });
 
 export type RegisterSchema = z.infer<typeof RegisterSchema>;
