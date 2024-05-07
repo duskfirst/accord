@@ -160,13 +160,18 @@ alter table message
     enable row level security;
 
 create policy "Members can create a message" on message
-    for insert with check((select auth.uid()) = sent_by);
+    for insert with check(auth.uid() = sent_by);
     
 create policy "Members can view their conversation messages" on message
-    for select using ((select auth.uid()) in (select one from conversation where conversation.id = message.conversation) or (select auth.uid()) in (select another from conversation where conversation.id = message.conversation));
+    for select using (
+        exists (
+            select true from conversation
+                where conversation.id = message.conversation and (conversation.one = auth.uid() or conversation.another = auth.uid())
+        )
+    );
 
 create policy "Sender can update the message" on message
-    for update using ((select auth.uid()) = sent_by and not deleted);
+    for update using (auth.uid() = sent_by);
 
 ```
 
