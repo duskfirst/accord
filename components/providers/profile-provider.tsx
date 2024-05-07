@@ -13,15 +13,15 @@ export const useProfile = () => {
 
 export const ProfileProvider = ({
     children
-} : {
-    children : React.ReactNode
+}: {
+    children: React.ReactNode
 }) => {
 
     const [profile, setProfile] = useState<Profile>({
         avatar_url: null,
         display_name: null,
-        id: null,
-        username: null, 
+        id: "",
+        username: "",
         website: null,
     });
 
@@ -45,7 +45,7 @@ export const ProfileProvider = ({
 
     return (
         <ProfileContext.Provider value={[profile, setProfile]} >
-            { children }
+            {children}
         </ProfileContext.Provider>
     );
 };
