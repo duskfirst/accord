@@ -53,7 +53,7 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
 
 
     if (message.deleted) return null;
-
+    const dateTime = (new Date(message.sent_at)).toLocaleString().split(",");
     return (
         <div className="flex px-4 my-2 w-full hover:bg-accent">
             <div className="flex flex-col items-center justify-start p-2">
@@ -72,7 +72,8 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                         {sender.display_name || sender.username}
                     </span>
                     <span className="text-slate-300 min-w-20 text-wrap text-xs mt-2">
-                        {(new Date(message.sent_at)).toDateString()}
+
+                        {dateTime[1] + " " + dateTime[0]}
                     </span>
                     {
                         !isEditing &&
