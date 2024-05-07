@@ -52,8 +52,6 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
     };
 
 
-    if (message.deleted) return null;
-
     return (
         <div className="flex px-4 my-2 w-full hover:bg-accent">
             <div className="flex flex-col items-center justify-start p-2">
@@ -68,7 +66,7 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
             </div>
             <div className="text-start mb-1 flex flex-col p-1 w-full text-gray-100">
                 <div className="flex min-w-fit justify-start gap-4 items-baseline w-full">
-                    <span className="font-bold text-lg align-middle text-start">
+                    <span className="font-bold text-md align-middle text-start">
                         {sender.display_name || sender.username}
                     </span>
                     <span className="text-slate-300 min-w-20 text-wrap text-xs mt-2">
@@ -84,7 +82,7 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                                 </Link>
                             }
                             {
-                                message.sent_by === profile.id && <UpdateMessage onDelete={onDelete} onEdit={onEdit} />
+                                message.deleted || message.sent_by === profile.id && <UpdateMessage onDelete={onDelete} onEdit={onEdit} />
                             }
                         </div>
                     }
@@ -96,9 +94,11 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                 {
                     !isEditing && !message.file_url &&
                     <div className="text-wrap whitespace-pre-line text-sm">
-                        {message.content}
+                        <p className={message.deleted ? "italic text-gray-300" : ""}>
+                            {message.content}
+                        </p>
                         {
-                            message.edited &&
+                            message.deleted || message.edited  &&
                             <span className="text-slate-300 w-fit text-xs mx-2">
                                 Edited
                             </span>
@@ -115,12 +115,6 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                         />
                         <Button className="h-fit font-semibold border-2 hover:border-primary" onClick={onSave}>Save</Button>
                     </div>
-                }
-                {
-                    message.edited &&
-                    <span className="text-zinc-600 w-full text-sm mx-2 text-end">
-                        Edited
-                    </span>
                 }
             </div>
         </div >
