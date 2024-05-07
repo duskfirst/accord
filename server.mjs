@@ -15,6 +15,8 @@ const handler = app.getRequestHandler();
 import { createServerClient } from "./server/utils/supabase.mjs";
 
 let io = null;
+const socket_user = new Map();
+const user_socket = new Map();
 
 const updateMessage = async (req, res, user, supabase) => {
     try {
@@ -72,7 +74,7 @@ const updateMessage = async (req, res, user, supabase) => {
             throw new Error("Missing content or file");
         }
         
-        const { data: updatedData, error: updateError } = await supabase
+        const { error: updateError } = await supabase
             .from("message")
             .update({
                 content: updatedMessage.deleted ? "This message has been deleted" : updatedMessage.content,
@@ -84,15 +86,30 @@ const updateMessage = async (req, res, user, supabase) => {
             .eq("id", updatedMessage.id);
         
         if (updateError) {
-            console.log(updateError);
             res.writeHead(500);
             throw new Error("Internal Error");
         }
+
+        const { data: conversation, error: conversationError } = await supabase
+            .from("conversation")
+            .select("one,another")
+            .eq("id", oldMessage.conversation);
         
+        const { data: message } = await supabase
+            .from("message")
+            .select("*")
+            .eq("id", oldMessage.id);
+        
+        if (conversation?.length) {
+            const receiver = conversation[0].one === user.id ? conversation[0].another : conversation[0].one;
+            if (user_socket[receiver]) {
+                io.to(user_socket[receiver]).emit(`conversation/${oldMessage.conversation}/update`, message);
+            }
+        }
+
         res.writeHead(200);
-        res.write(JSON.stringify(updatedData));
+        res.write(JSON.stringify(message));
         
-        console.log(res);
     } catch(error) {
         if (res.statusCode === 200)
             res.writeHeader(500);
@@ -123,9 +140,8 @@ async function customerHandler(req, res, parsedUrl) {
             case "POST":
                 break;
             default:
-                break
+                break;
         }
-        console.log(req.method);
         res.end();
     } else {
         handler(req, res, parsedUrl);
@@ -135,8 +151,28 @@ async function customerHandler(req, res, parsedUrl) {
 app.prepare().then(() => {
     const httpServer = createServer(customerHandler);
     io = new Server(httpServer);
+    io.engine.use(async (req, res, next) => {
+        const supabase = createServerClient({ req, res }, {
+            url: process.env.NEXT_PUBLIC_SUPABASE_URL,
+            anon_key: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+        });
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+            req._query.userId = user.id;
+            next();
+        } else {
+            next(new Error("Unauthorized"));
+        }
+    });
     io.on("connection", (socket) => {
-        console.log(socket.id);
+        user_socket.set(socket.handshake.query.userId, socket.id);
+        socket_user.set(socket.id, socket.handshake.query.userId);
+        socket.on("disconnect", (reason) => {
+            const socketId = socket.id;
+            const userId = socket_user[socketId];
+            user_socket.delete(userId);
+            socket_user.delete(socketId);
+        })
     });
     httpServer
         .once("error", (err) => {
