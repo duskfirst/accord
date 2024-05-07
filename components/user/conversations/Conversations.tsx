@@ -38,7 +38,7 @@ const Conversations = async ({ profile } : ConversationsProps) => {
         if (error) {
             return <ConversationsError />;
         }
-        profiles[data.id] = data;
+        profiles[data.id!] = data;
         conversations.push({ ...conversation, other: data });
     }
 

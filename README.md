@@ -169,3 +169,10 @@ npm run dev
 npm run build
 npm run start
 ```
+
+On windows:
+
+```
+npm run build
+npm run start:win
+```
