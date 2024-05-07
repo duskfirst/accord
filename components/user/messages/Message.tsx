@@ -1,7 +1,7 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Conversation, Message as MessageType, Profile } from "@/types/types";
-import { CircleUserRound } from "lucide-react";
+import { CircleUserRound, Download } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import FileDisplay from "./FileDisplay";
@@ -66,14 +66,21 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                     </span>
                     {
                         !isEditing &&
-                        <div className="self-end flex flex-grow justify-end">
+                        <div className="self-end flex gap-4 flex-grow justify-end">
+                            {
+                                message.file_url &&
+                                <Link href={message.file_url} target="_blank" download className="self-end" >
+                                    <Download />
+                                </Link>
+                            }
                             <UpdateMessage onDelete={onDelete} onEdit={onEdit} />
+
                         </div>
                     }
                 </div>
                 {
-                    message.file_url &&
-                    <FileDisplay file_url={message.file_url} file_type={"images/png"} />
+                    message.file_url && message.file_type &&
+                    <FileDisplay file_url={message.file_url} file_type={message.file_type} />
                 }
                 {
                     !isEditing && !message.file_url &&

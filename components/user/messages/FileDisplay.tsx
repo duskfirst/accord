@@ -19,7 +19,7 @@ const FileDisplay = ({ file_type, file_url }: FileDisplayProps) => {
                 < div className="w-max p-2 gap-2 flex flex-col rounded-md items-start bg-accent" >
                     {
                         <Dialog >
-                            <DialogTrigger>
+                            <DialogTrigger >
                                 <Image src={file_url} alt={"Image"} width={400} height={400} className="rounded-md" />
                             </DialogTrigger>
                             <DialogContent className="min-w-[80vw] min-h-[90vh] items-center justify-center">
@@ -56,11 +56,7 @@ const FileDisplay = ({ file_type, file_url }: FileDisplayProps) => {
                         <span className="font-semibold text-md">
                             File
                         </span>
-
                     </div>
-                    <Link href={file_url} target="_blank" download  >
-                        <Download />
-                    </Link>
                 </div >
             );
             break;
