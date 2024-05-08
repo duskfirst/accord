@@ -31,6 +31,9 @@ import {
 import { PostgrestResponse, SupabaseClient } from "@supabase/supabase-js";
 import { createBrowserClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
+import { Loader } from "lucide-react";
+import { v4 as uuidv4 } from "uuid";
+
 
 interface Props {
     profile: Profile;
@@ -114,32 +117,81 @@ const EditProfile = ({ profile }: Props) => {
 
     };
 
+    const [wait, setWait] = useState(false);
+    const [file, setFile] = useState<File>();
+    const [openProfile, setOpenProfile] = useState(false);
+
+    const UploadProfilePic = async () => {
+        if (!file)
+            return;
+        setWait(true);
+        const fileExt = file.name.split(".").pop();
+        const fileId = uuidv4() + "." + fileExt;
+        const { data, error } = await supabase
+            .storage
+            .from("media")
+            .upload(fileId, file, {
+                cacheControl: "3600",
+                upsert: false
+            });
+        const { data: { publicUrl } } = await supabase
+            .storage
+            .from("media")
+            .getPublicUrl(fileId);
+        await supabase
+            .from("profile")
+            .update({ avatar_url: publicUrl })
+            .eq("id", profile.id);
+        setUserProfile({
+            ...profile,
+            avatar_url: publicUrl
+        });
+        setWait(false);
+        setOpenProfile(false);
+    };
+
+    const handleChange = (event: any) => {
+        setFile(event.target.files[0]);
+    };
+
     return (
         <div className="h-full w-full flex flex-col py-10 px-56 gap-5">
             <div>
                 <AspectRatio ratio={4 / 1} className="bg-muted">
                     <Image
-                        onClick={() => console.log("Clicked!")}
                         src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=800&dpr=2&q=80"
                         alt="Header image"
                         fill
-                        className="rounded-md object-cover hover:opacity-75"
+                        className="rounded-md object-cover"
                     />
                 </AspectRatio>
-                <Avatar className="size-40 ml-4 -mt-20 bg-transparent">
-                    <AvatarImage
-                        className="hover:opacity-75"
-                        onClick={() => console.log("Clicked!")}
-                        src={userProfile.avatar_url || "https://github.com/shadcn.png"}
-                    />
-                    <AvatarFallback>Profile picture</AvatarFallback>
-                </Avatar>
+                <Dialog open={openProfile} onOpenChange={setOpenProfile}>
+                    <DialogTrigger asChild>
+                        <Avatar className="size-40 ml-4 -mt-20 bg-transparent hover:scale-105 cursor-pointer" onClick={() => console.log("Clicked!")}>
+                            <AvatarImage
+                                src={userProfile.avatar_url || "https://github.com/shadcn.png"}
+                            />
+                            <AvatarFallback>Profile picture</AvatarFallback>
+                        </Avatar>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                            <DialogTitle>Upload Profile Picture</DialogTitle>
+                        </DialogHeader>
+                        <input onChange={handleChange} id="profile-pic-upload" type="file" className="hover:cursor-pointer" accept="image/" />
+                        <div className="grid gap-4 py-4">
+                            <DialogFooter>
+                                <Button disabled={wait} onClick={UploadProfilePic}>{wait ? <Loader className="animate-spin" /> : "Save"}</Button>
+                            </DialogFooter>
+                        </div>
+                    </DialogContent>
+                </Dialog>
             </div>
             <div className="flex flex-col gap-1">
                 <p className="text-lg font-medium">{userProfile.display_name}</p>
                 <p className="text-xs font-light">{userProfile.username}</p>
                 {userProfile.website && (
-                    <Link href={userProfile.website}>{userProfile.website}</Link>
+                    <Link className="text-blue-500 hover:underline" href={userProfile.website}>{userProfile.website}</Link>
                 )}
             </div>
             <Dialog open={open} onOpenChange={setOpen}>
