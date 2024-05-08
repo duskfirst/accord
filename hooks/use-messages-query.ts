@@ -4,7 +4,7 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 
-const MESSAGE_COUNT = 5; // TODO: Change it to 20
+const MESSAGE_COUNT = 20;
 
 
 export const useMessagesQuery = (idKey: string, queryKey: string) => {

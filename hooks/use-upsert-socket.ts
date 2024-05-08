@@ -32,6 +32,29 @@ export const useUpsertSocket = (idKey: string, queryKey: string) => {
                 };
             });
         });
+        socket.on(insertKey, (message: Message) => {
+            queryClient.setQueryData([idKey, queryKey], (oldData: any) => {
+                if (!oldData?.pages?.length) {
+                    return {
+                        pages: [{
+                            data: [message],
+                        }],
+                    };
+                }
+                const newData = [...oldData.pages];
+                newData[0] = {
+                    ...newData[0],
+                    data: [
+                        message,
+                        ...newData[0].data,
+                    ],
+                };
+                return {
+                    ...oldData,
+                    pages: newData,
+                };
+            });
+        });
         return () => {
             socket.off(updateKey);
             socket.off(insertKey);

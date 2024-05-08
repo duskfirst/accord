@@ -4,10 +4,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Conversation, Message as MessageType, Profile } from "@/types/types";
 import { CircleUserRound, Download } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import FileDisplay from "@/components/user/messages/FileDisplay";
 import MessageOptions from "@/components/user/messages/MessageOptions";
 import { Button } from "@/components/ui/button";
+import EmojiPicker from "@/components/user/messages/EmojiPicker";
 
 interface MessageProps {
     conversation: Conversation;
@@ -20,20 +21,59 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [editedValue, setEditedValue] = useState(message.content || "");
+    const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-    const onSave = () => {
-        if (message.content !== editedValue) {
-            console.log(editedValue);
-        }
+    const onSave = async () => {
         setIsEditing(false);
+        const finalContent = editedValue.trim();
+        if (finalContent && message.content !== finalContent) {
+            const response = await fetch("/api/socket/io", {
+                method: "PUT",
+                body: JSON.stringify({
+                    content: finalContent,
+                    file_url: message.file_url,
+                    file_type: message.file_type,
+                    id: message.id,
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+        }
     };
 
     const onEdit = () => {
-
         setIsEditing(true);
-
+        setTimeout(() => {
+            textAreaRef.current?.focus();
+            textAreaRef.current!.selectionStart = textAreaRef.current!.value.length;
+            if (textAreaRef.current) {
+                textAreaRef.current!.style.height = "0";
+                textAreaRef.current!.style.height = textAreaRef.current!.scrollHeight + "px";
+            }
+        }, 1);
     };
 
+    const changeTextAreaHeight = () => {
+        if (textAreaRef.current) {
+            textAreaRef.current!.style.height = "0";
+            textAreaRef.current!.style.height = textAreaRef.current!.scrollHeight + "px";
+        }
+    };
+
+    useEffect(() => {
+        changeTextAreaHeight();
+    }, [textAreaRef.current?.scrollHeight]);
+
+    const onKeyEvent = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        changeTextAreaHeight();
+        if (e.key === "Enter" && e.ctrlKey) {
+            onSave();
+        }
+        else if (e.key === "Escape") {
+            setIsEditing(false);
+        }
+    };
 
     const onDelete = async () => {
         const response = await fetch("/api/socket/io", {
@@ -100,13 +140,32 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                 }
                 {
                     isEditing &&
-                    <div className="flex items-center text-sm gap-2">
-                        <textarea
-                            onChange={(event) => setEditedValue(event.target.value)}
-                            value={editedValue}
-                            className="resize-none max-h-12  md:max-h-11 w-full bg-background rounded-lg  p-2 flex justify-center focus:outline-none"
-                        />
-                        <Button className="h-fit font-semibold border-2 hover:border-primary" onClick={onSave}>Save</Button>
+                    <div className="flex flex-col text-sm gap-2">
+                        <div className="flex w-full bg-background items-end rounded-md">
+                            <textarea
+                                rows={1}
+                                onKeyDown={(e) => onKeyEvent(e)}
+                                ref={textAreaRef}
+                                onChange={(event) => setEditedValue(event.target.value)}
+                                value={editedValue}
+                                className="resize-none w-full auto-rows-auto bg-background rounded-lg p-2 flex justify-center focus:outline-none"
+
+                            />
+                            <EmojiPicker textAreaRef={textAreaRef} inputVal={editedValue} setInputVal={setEditedValue} />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4 self-start">
+                            <Button
+                                className="h-fit font-semibold py-1 w-full border-2 border-primary"
+                                onClick={onSave}>
+                                Save
+                            </Button>
+                            <Button
+                                variant={"destructive"}
+                                className="h-fit w-full py-1 font-semibold border-2 border-destructive hover:bg-transparent"
+                                onClick={() => setIsEditing(false)}>
+                                Cancel
+                            </Button>
+                        </div>
                     </div>
                 }
             </div>

@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/form";
 import { PostgrestResponse, SupabaseClient } from "@supabase/supabase-js";
 import { createBrowserClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 interface Props {
     profile: Profile;
@@ -59,7 +60,11 @@ const formSchema = z.object({
 });
 
 const EditProfile = ({ profile }: Props) => {
+
+    const router = useRouter();
+
     const [userProfile, setUserProfile] = useState<Profile>(profile);
+    const [open, setOpen] = useState(false);
     const supabase = createBrowserClient();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -70,136 +75,43 @@ const EditProfile = ({ profile }: Props) => {
             website: profile.website || "",
         },
         mode: "onSubmit",
+        reValidateMode: "onChange",
     });
 
-    const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        if (values.username !== userProfile.username) {
+    const onSubmit = async ({ display_name, username, website }: z.infer<typeof formSchema>) => {
+        if (username !== userProfile.username) {
             const { data, error } = (await supabase
                 .from("profile")
                 .select("username")
-                .eq("username", values.username)) as PostgrestResponse<string>;
-            if (error) console.log("Something went wrong.");
+                .eq("username", username)) as PostgrestResponse<string>;
+            if (error) {
+                console.log("Something went wrong.");
+                return;
+            }
             if (data?.length) {
                 form.setError("username", { message: "Username is already taken." });
+                return;
             }
         }
+        const { error } = await supabase
+            .from("profile")
+            .update({ display_name, username, website })
+            .eq("id", profile.id);
 
-        const usernameChange = values.username !== userProfile.username;
-        const displayNameChange = values.display_name !== userProfile.display_name;
-        const websiteChange = values.website !== userProfile.website;
-
-        if (usernameChange && !displayNameChange && !websiteChange) {
-            const { error } = await supabase
-                .from("profile")
-                .update({ username: values.username })
-                .eq("username", userProfile.username);
-            if (error) {
-                console.log("Something went wrong.");
-                return;
-            }
-
-            setUserProfile({
-                ...userProfile,
-                username: values.username,
-            });
-        } else if (!usernameChange && displayNameChange && !websiteChange) {
-            const { error } = await supabase
-                .from("profile")
-                .update({ displayNameChange: values.display_name })
-                .eq("username", userProfile.username);
-            if (error) {
-                console.log("Something went wrong.");
-                return;
-            }
-
-            setUserProfile({
-                ...userProfile,
-                display_name: values.display_name,
-            });
-        } else if (!usernameChange && !displayNameChange && websiteChange) {
-            const { error } = await supabase
-                .from("profile")
-                .update({ website: values.website })
-                .eq("username", userProfile.username);
-            if (error) {
-                console.log("Something went wrong.");
-                return;
-            }
-
-            setUserProfile({
-                ...userProfile,
-                website: values.website === "" ? null : values.website,
-            });
-        } else if (usernameChange && displayNameChange && !websiteChange) {
-            const { error } = await supabase
-                .from("profile")
-                .update({
-                    username: values.username,
-                    display_name: values.display_name,
-                })
-                .eq("username", userProfile.username);
-            if (error) {
-                console.log("Something went wrong.");
-                return;
-            }
-
-            setUserProfile({
-                ...userProfile,
-                username: values.username,
-                display_name: values.display_name,
-            });
-        } else if (usernameChange && !displayNameChange && websiteChange) {
-            const { error } = await supabase
-                .from("profile")
-                .update({ username: values.username, website: values.website })
-                .eq("username", userProfile.username);
-            if (error) {
-                console.log("Something went wrong.");
-                return;
-            }
-
-            setUserProfile({
-                ...userProfile,
-                username: values.username,
-                website: values.website === "" ? null : values.website,
-            });
-        } else if (!usernameChange && displayNameChange && websiteChange) {
-            const { error } = await supabase
-                .from("profile")
-                .update({ display_name: values.display_name, website: values.website })
-                .eq("username", userProfile.username);
-
-            if (error) {
-                console.log("Something went wrong.");
-                return;
-            }
-
-            setUserProfile({
-                ...userProfile,
-                display_name: values.display_name,
-                website: values.website === "" ? null : values.website,
-            });
-        } else {
-            const { error } = await supabase
-                .from("profile")
-                .update({
-                    username: values.username,
-                    display_name: values.display_name,
-                    website: values.website,
-                });
-
-            if (error) {
-                console.log("Something went wrong.");
-                return;
-            }
-
-            setUserProfile({
-                ...userProfile,
-                username: values.username,
-                display_name: values.display_name,
-                website: values.website === "" ? null : values.website,
-            });
+        if (error) {
+            console.log(error);
+            form.setError("root", error);
+            return;
         }
+
+        setUserProfile({
+            ...profile,
+            display_name, username, website
+        });
+
+        setOpen(false);
+        router.push("/" + username);
+
     };
 
     return (
@@ -230,17 +142,17 @@ const EditProfile = ({ profile }: Props) => {
                     <Link href={userProfile.website}>{userProfile.website}</Link>
                 )}
             </div>
-            <Dialog>
+            <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger className="flex" asChild>
                     <Button variant="outline" className="w-32 h-12 self-end">
-            Edit Profile
+                        Edit Profile
                     </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
                         <DialogTitle>Edit profile</DialogTitle>
                         <DialogDescription>
-              Make changes to your profile here. Click save when you are done.
+                            Make changes to your profile here. Click save when you are done.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
