@@ -73,9 +73,9 @@ const EditProfile = ({ profile }: Props) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            username: profile.username,
-            display_name: profile.display_name || profile.username,
-            website: profile.website || "",
+            username: userProfile.username,
+            display_name: userProfile.display_name || profile.username,
+            website: userProfile.website || "",
         },
         mode: "onSubmit",
         reValidateMode: "onChange",
@@ -99,7 +99,7 @@ const EditProfile = ({ profile }: Props) => {
         const { error } = await supabase
             .from("profile")
             .update({ display_name, username, website })
-            .eq("id", profile.id);
+            .eq("id", userProfile.id);
 
         if (error) {
             console.log(error);
@@ -108,7 +108,7 @@ const EditProfile = ({ profile }: Props) => {
         }
 
         setUserProfile({
-            ...profile,
+            ...userProfile,
             display_name, username, website
         });
 
@@ -141,9 +141,9 @@ const EditProfile = ({ profile }: Props) => {
         await supabase
             .from("profile")
             .update({ avatar_url: publicUrl })
-            .eq("id", profile.id);
+            .eq("id", userProfile.id);
         setUserProfile({
-            ...profile,
+            ...userProfile,
             avatar_url: publicUrl
         });
         setWait(false);

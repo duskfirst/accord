@@ -8,8 +8,7 @@ import { createServerClient } from "./server/utils/supabase.mjs";
 import { updateMessage } from "./server/message/update.mjs";
 import { insertMessage } from "./server/message/insert.mjs";
 
-
-const dev = process.env.NODE_ENV?.trim() !== "production";
+const dev = process.env.NODE_ENV !== "production";
 const hostname = process.env.HOST || "localhost";
 const port = process.env.PORT || 3000;
 
