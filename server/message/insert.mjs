@@ -29,11 +29,6 @@ export const insertMessage = async (req, res, user, supabase, io, user_socket) =
 
         message.file_url = message.file_url?.trim();
         message.file_type = message.file_type?.trim();
-        
-        if (message.file_url && !message.file_type || message.file_type && !message.file_url) {
-            res.writeHead(400);
-            throw new Error("File URL and file type mismatch");
-        }
 
         message.content = message.content?.trim();
         
