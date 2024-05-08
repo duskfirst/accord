@@ -2,13 +2,15 @@ import Image from "next/image";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import ReactAudioPlayer from "react-audio-player";
 import { File } from "lucide-react";
+import { Message } from "@/types/types";
 
 interface FileDisplayProps {
     file_url: string;
     file_type: string;
+    message: Message;
 }
 
-const FileDisplay = ({ file_type, file_url }: FileDisplayProps) => {
+const FileDisplay = ({ file_type, file_url, message }: FileDisplayProps) => {
 
     switch (file_type.split("/")[0]) {
         case "image":
@@ -18,6 +20,7 @@ const FileDisplay = ({ file_type, file_url }: FileDisplayProps) => {
                 < div className="w-max p-2 gap-2 flex flex-col rounded-md items-start bg-accent" >
                     {
                         <Dialog >
+                            {message.content}
                             <DialogTrigger >
                                 <Image src={file_url} alt={"Image"} width={400} height={400} className="rounded-md" />
                             </DialogTrigger>
@@ -33,6 +36,7 @@ const FileDisplay = ({ file_type, file_url }: FileDisplayProps) => {
             return (
 
                 < div className="w-max p-2 flex flex-col rounded-md items-start bg-accent" >
+                    {message.content}
                     <video src={file_url} controls >
                     </video>
                 </div >
@@ -43,6 +47,7 @@ const FileDisplay = ({ file_type, file_url }: FileDisplayProps) => {
             return (
 
                 < div className="w-max p-2 flex flex-col rounded-md items-start bg-accent" >
+                    {message.content}
                     <ReactAudioPlayer src={file_url} controls />
                 </div >
             );
@@ -50,7 +55,8 @@ const FileDisplay = ({ file_type, file_url }: FileDisplayProps) => {
         default:
             return (
 
-                <div className="w-1/3 p-4 gap-4 flex rounded-md hover:bg-background justify-center items-center bg-accent">
+                <div className="w-1/3 p-4 gap-4 flex flex-col text-start rounded-md hover:bg-background justify-center items-start bg-accent">
+                    {message.content}
                     <div className="pb-1 flex w-full gap-2  items-center">
                         <File />
                         <span className="font-semibold text-md">

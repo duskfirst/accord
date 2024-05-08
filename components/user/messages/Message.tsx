@@ -122,7 +122,7 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
                 </div>
                 {
                     message.file_url && message.file_type &&
-                    <FileDisplay file_url={message.file_url} file_type={message.file_type} />
+                    <FileDisplay file_url={message.file_url} file_type={message.file_type} message={message} />
                 }
                 {
                     !isEditing && !message.file_url &&
