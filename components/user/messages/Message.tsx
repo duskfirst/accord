@@ -23,11 +23,23 @@ const Message = ({ sender, conversation, message, profile }: MessageProps) => {
     const [editedValue, setEditedValue] = useState(message.content || "");
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-    const onSave = () => {
-        if (message.content !== editedValue) {
-            console.log(editedValue);
-        }
+    const onSave = async () => {
         setIsEditing(false);
+        const finalContent = editedValue.trim();
+        if (finalContent && message.content !== finalContent) {
+            const response = await fetch("/api/socket/io", {
+                method: "PUT",
+                body: JSON.stringify({
+                    content: finalContent,
+                    file_url: message.file_url,
+                    file_type: message.file_type,
+                    id: message.id,
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+        }
     };
 
     const onEdit = () => {

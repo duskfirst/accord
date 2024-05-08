@@ -22,27 +22,22 @@ const updateMessage = async (req, res, user, supabase) => {
     try {
         
         const updatedMessage = req.body;
+        
         if (!updatedMessage?.id) {
             res.writeHead(400);
             throw new Error("Missing Message ID");
         }
         
-        const { data, error } = await supabase
+        const { data: oldMessage } = await supabase
             .from("message")
             .select("*")
-            .eq("id", updatedMessage.id);
-        
-        if (error) {
-            res.writeHead(500);
-            throw new Error("Internal Error");
-        }
+            .eq("id", updatedMessage.id)
+            .single();
 
-        if (!data?.length) {
+        if (!oldMessage) {
             res.writeHead(404);
             throw new Error("Message not found");
         }
-
-        const oldMessage = data[0];
 
         if (user.id !== oldMessage.sent_by) {
             res.writeHead(401);
@@ -52,11 +47,6 @@ const updateMessage = async (req, res, user, supabase) => {
         if (oldMessage.deleted) {
             res.writeHead(400);
             throw new Error("This message has already been deleted");
-        }
-        
-        if (!updatedMessage.deleted && !updatedMessage.edited && oldMessage.edited) {
-            res.writeHead(400);
-            throw new Error("Cannot unedit a message");
         }
         
         updatedMessage.file_url = updatedMessage.file_url?.trim();
@@ -73,8 +63,8 @@ const updateMessage = async (req, res, user, supabase) => {
             res.writeHead(400);
             throw new Error("Missing content or file");
         }
-        
-        const { error: updateError } = await supabase
+
+        const { data: message } = await supabase
             .from("message")
             .update({
                 content: updatedMessage.deleted ? "This message has been deleted" : updatedMessage.content,
@@ -83,9 +73,11 @@ const updateMessage = async (req, res, user, supabase) => {
                 file_url: updatedMessage.deleted ? null : updatedMessage.file_url,
                 file_type: updatedMessage.deleted ? null : updatedMessage.file_type,
             })
-            .eq("id", updatedMessage.id);
+            .eq("id", updatedMessage.id)
+            .select()
+            .single();
         
-        if (updateError) {
+        if (!message) {
             res.writeHead(500);
             throw new Error("Internal Error");
         }
@@ -95,14 +87,7 @@ const updateMessage = async (req, res, user, supabase) => {
             .select("one,another")
             .eq("id", oldMessage.conversation)
             .single();
-
-            
-        const { data: message } = await supabase
-            .from("message")
-            .select("*")
-            .eq("id", oldMessage.id)
-            .single();
-            
+        
         const idKey = oldMessage.conversation;
         const queryKey = "conversation";
         const updateKey = `${queryKey}|${idKey}|update`;
