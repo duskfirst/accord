@@ -40,7 +40,7 @@ Under `Authentication > Configuration > Email Templates`
     Your confirmation code is <span class='font-size: 3rem'><b>{{ .Token }}</b></span>
     ```
 
-> **NOTE:** It is important that you have `{{ .Token }}` in the email body or the user will not receive the OTP. The built-in email service has a rate limit of [3 per hour](https://supabase.com/docs/guides/platform/going-into-prod#auth-rate-limits). Set up a custom SMTP server if you are planning on having a large number of users under `Project Settings > Configuration > Authentication > SMTP Settings`
+> **NOTE:** It is important that you have `{{ .Token }}` in the email body or the user will not receive the OTP. The built-in email service has a rate limit of [3 per hour](https://supabase.com/docs/guides/platform/going-into-prod#auth-rate-limits). Set up a custom SMTP server if you are planning on having a large number of users under `Project Settings > Configuration > Authentication > SMTP Settings` or follow the guide [here](https://supabase.com/docs/guides/auth/auth-smtp)
 
 #### Database Setup
 
