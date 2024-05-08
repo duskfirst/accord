@@ -22,9 +22,23 @@ const MessageFooter = ({ conversation, profile }: MessageFooterProps) => {
     const [fileUrl, setFileUrl] = useState("");
     const [fileType, setFileType] = useState("");
 
-    const onClick = () => {
-        console.log(inputVal);
-        setInputVal("");
+    const onClick = async () => {
+        const finalContent = inputVal.trim();
+        if (finalContent) {
+            setInputVal("");
+            const response = await fetch("/api/socket/io", {
+                method: "POST",
+                body: JSON.stringify({
+                    content: finalContent,
+                    file_url: null,
+                    file_type: null,
+                    conversation: conversation.id,
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+        }
     };
 
 
